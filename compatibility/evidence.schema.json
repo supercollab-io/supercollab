@@ -15,7 +15,7 @@
   "properties": {
     "client_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "client_version": { "type": "string", "minLength": 1 },
-    "runtime": { "const": "@supercollab/mcp@0.7.0-alpha.4" },
+    "runtime": { "const": "@supercollab/mcp@0.7.0-alpha.5" },
     "operating_system": { "type": "string", "minLength": 1 },
     "verified_at": { "type": "string", "format": "date" },
     "access_note": { "type": "string" },

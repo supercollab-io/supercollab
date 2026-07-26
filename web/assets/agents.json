@@ -2,7 +2,7 @@
   "schema_version": 1,
   "runtime": {
     "package": "@supercollab/mcp",
-    "version": "0.7.0-alpha.4",
+    "version": "0.7.0-alpha.5",
     "node": ">=20",
     "transport": "stdio",
     "install_behavior": "npx downloads the pinned runtime into npm's local cache and starts it; no global SuperCollab install or management CLI is required"
@@ -24,7 +24,7 @@
       "setup": {
         "format": "command",
         "target": "Run from the project folder",
-        "value": "claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.4"
+        "value": "claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
       },
       "verify": "Start a fresh Claude Code session, open /mcp, then ask Claude to check SuperCollab status.",
       "docs": "https://code.claude.com/docs/en/mcp"
@@ -45,7 +45,7 @@
       "setup": {
         "format": "command",
         "target": "Run from the project folder",
-        "value": "codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.4"
+        "value": "codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
       },
       "verify": "Start a fresh Codex session, run /mcp, then ask Codex to check SuperCollab status.",
       "docs": "https://learn.chatgpt.com/docs/extend/mcp"
@@ -68,7 +68,7 @@
       "setup": {
         "format": "command",
         "target": "Run from the project folder",
-        "value": "gemini mcp add supercollab npx -y @supercollab/mcp@0.7.0-alpha.4"
+        "value": "gemini mcp add supercollab npx -y @supercollab/mcp@0.7.0-alpha.5"
       },
       "verify": "Restart Gemini CLI, run /mcp list, then ask Gemini to check SuperCollab status.",
       "docs": "https://geminicli.com/docs/tools/mcp-server/"
@@ -91,7 +91,7 @@
       "setup": {
         "format": "json",
         "target": "Merge into opencode.json",
-        "value": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"mcp\": {\n    \"supercollab\": {\n      \"type\": \"local\",\n      \"command\": [\"npx\", \"-y\", \"@supercollab/mcp@0.7.0-alpha.4\"],\n      \"enabled\": true\n    }\n  }\n}"
+        "value": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"mcp\": {\n    \"supercollab\": {\n      \"type\": \"local\",\n      \"command\": [\"npx\", \"-y\", \"@supercollab/mcp@0.7.0-alpha.5\"],\n      \"enabled\": true\n    }\n  }\n}"
       },
       "verify": "Restart OpenCode, run opencode mcp list, then ask it to check SuperCollab status.",
       "docs": "https://opencode.ai/docs/mcp-servers/"
@@ -111,7 +111,7 @@
       "setup": {
         "format": "json",
         "target": "Merge into .vscode/mcp.json",
-        "value": "{\n  \"servers\": {\n    \"supercollab\": {\n      \"type\": \"stdio\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.4\"]\n    }\n  }\n}"
+        "value": "{\n  \"servers\": {\n    \"supercollab\": {\n      \"type\": \"stdio\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.5\"]\n    }\n  }\n}"
       },
       "verify": "Run MCP: List Servers, start SuperCollab, then ask Copilot to check SuperCollab status.",
       "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
@@ -134,7 +134,7 @@
       "setup": {
         "format": "command",
         "target": "Run from the project folder",
-        "value": "cline mcp add --transport stdio --yes supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.4"
+        "value": "cline mcp add --transport stdio --yes supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
       },
       "verify": "Start a fresh Cline session, then ask it to check SuperCollab status.",
       "docs": "https://docs.cline.bot/mcp/mcp-overview"

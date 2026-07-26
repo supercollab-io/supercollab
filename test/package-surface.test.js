@@ -26,7 +26,9 @@ test('packed artifact contains the MCP entry and no retired CLI package metadata
     timeout: 30_000,
   });
   assert.equal(packed.status, 0, packed.stderr);
-  const report = JSON.parse(packed.stdout)[0];
+  const parsed = JSON.parse(packed.stdout);
+  const report = Array.isArray(parsed) ? parsed[0] : Object.values(parsed)[0];
+  assert.ok(report, 'npm pack did not return a package report');
   const files = new Set(report.files.map((file) => file.path));
   assert.equal(report.name, '@supercollab/mcp');
   assert.equal(files.has('LICENSE'), true);

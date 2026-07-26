@@ -1,6 +1,6 @@
 # Compatibility and verification
 
-Target runtime: `@supercollab/mcp@0.7.0-alpha.4` on Node.js 20+.
+Target runtime: `@supercollab/mcp@0.7.0-alpha.5` on Node.js 20+.
 
 The canonical machine-readable matrix is
 [`web/assets/agents.json`](../web/assets/agents.json). `npm run check:compat`

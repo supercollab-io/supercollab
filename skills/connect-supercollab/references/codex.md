@@ -12,7 +12,7 @@ configuration.
 2. If no conflicting entry exists, add the pinned runtime:
 
    ```bash
-   codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.4
+   codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5
    ```
 
 3. Start a fresh Codex session, run `/mcp`, and ask Codex to check SuperCollab

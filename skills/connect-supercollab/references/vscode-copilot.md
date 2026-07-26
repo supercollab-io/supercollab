@@ -12,7 +12,7 @@ VS Code agent mode supports native MCP through `.vscode/mcp.json`.
        "supercollab": {
          "type": "stdio",
          "command": "npx",
-         "args": ["-y", "@supercollab/mcp@0.7.0-alpha.4"]
+         "args": ["-y", "@supercollab/mcp@0.7.0-alpha.5"]
        }
      }
    }
