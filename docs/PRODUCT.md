@@ -67,7 +67,7 @@ agent history to the index.
 
 ## Remaining launch work
 
-- publish `@supercollab/mcp@0.7.0-alpha.5` through the protected release workflow;
+- publish `@supercollab/mcp@0.7.0-alpha.6` through the protected release workflow;
 - configure npm Trusted Publishing after the initial package creation;
 - run the stdio and encrypted-product conformance gates against final tagged artifacts;
 - add membership removal plus group-key rotation;

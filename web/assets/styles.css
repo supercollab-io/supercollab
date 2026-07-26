@@ -110,33 +110,6 @@ img {
   letter-spacing: -0.025em;
 }
 
-.brand-mark {
-  position: relative;
-  display: inline-block;
-  width: 28px;
-  height: 24px;
-}
-
-.brand-mark i {
-  position: absolute;
-  width: 17px;
-  height: 17px;
-  border: 2px solid #a9c7ff;
-  border-radius: 6px;
-  box-shadow: 0 0 18px rgba(91, 142, 255, 0.26);
-}
-
-.brand-mark i:first-child {
-  top: 0;
-  left: 0;
-}
-
-.brand-mark i:last-child {
-  right: 0;
-  bottom: 0;
-  border-color: #83edb2;
-}
-
 .site-nav nav {
   display: flex;
   align-items: center;
@@ -175,29 +148,20 @@ img {
 }
 
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
   color: #a7b8d7;
 }
 
-.eyebrow span {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--green);
-  box-shadow: 0 0 13px rgba(121, 242, 173, 0.8);
-}
-
 .hero h1 {
+  width: 100%;
   margin: 29px 0 0;
   background: linear-gradient(145deg, #ffffff 18%, #d8d8da 56%, #797c82 100%);
   background-clip: text;
   color: transparent;
-  font-size: clamp(72px, 10.5vw, 142px);
+  font-size: clamp(96px, 12.5vw, 184px);
   font-weight: 720;
-  letter-spacing: -0.085em;
-  line-height: 0.88;
+  letter-spacing: -0.095em;
+  line-height: 0.86;
+  white-space: nowrap;
   -webkit-background-clip: text;
 }
 
@@ -465,11 +429,7 @@ img[src$="/cursor.svg"] {
 
 .matrix-count {
   flex: 0 0 auto;
-  padding: 6px 9px;
-  border: 1px solid rgba(121, 242, 173, 0.15);
-  border-radius: 999px;
-  background: rgba(121, 242, 173, 0.045);
-  color: #8bcaa7;
+  color: #747b85;
   font-family: var(--mono);
   font-size: 9px;
   text-transform: uppercase;
@@ -604,21 +564,11 @@ img[src$="/cursor.svg"] {
   gap: 8px;
 }
 
-.status-pill {
-  padding: 3px 7px;
-  border: 1px solid rgba(255, 255, 255, 0.095);
-  border-radius: 999px;
-  color: #8f969f;
+.integration-meta {
+  color: #5f6670;
   font-family: var(--mono);
   font-size: 8px;
   letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-
-.transport-label {
-  color: #5f6670;
-  font-family: var(--mono);
-  font-size: 9px;
   text-transform: uppercase;
 }
 
@@ -772,19 +722,10 @@ img[src$="/cursor.svg"] {
 .mini-boundary span {
   display: flex;
   align-items: center;
-  gap: 9px;
   color: #777f89;
   font-family: var(--mono);
   font-size: 9px;
   text-transform: uppercase;
-}
-
-.safe-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 99px;
-  background: var(--green);
-  box-shadow: 0 0 9px rgba(121, 242, 173, 0.44);
 }
 
 .faq-list {
@@ -1015,8 +956,8 @@ img[src$="/cursor.svg"] {
   }
 
   .hero h1 {
-    font-size: clamp(61px, 19vw, 86px);
-    line-height: 0.93;
+    font-size: clamp(50px, 16vw, 76px);
+    line-height: 0.9;
   }
 
   .hero-tagline {

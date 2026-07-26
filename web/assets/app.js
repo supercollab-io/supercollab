@@ -140,10 +140,7 @@ function renderAgentDetail(agent) {
   const headingCopy = make('div', 'detail-heading-copy');
   headingCopy.append(make('h3', '', agent.name));
   const status = make('div', 'status-row');
-  status.append(
-    make('span', 'status-pill', agent.integration_label),
-    make('span', 'transport-label', 'Local process'),
-  );
+  status.append(make('span', 'integration-meta', `${agent.integration_label} · local process`));
   headingCopy.append(status);
   heading.append(headingCopy);
   detail.append(heading, make('p', 'detail-summary', agent.summary));
