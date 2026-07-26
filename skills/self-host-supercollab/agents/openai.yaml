@@ -1,0 +1,4 @@
+interface:
+  display_name: "Self-host SuperCollab"
+  short_description: "Deploy a private encrypted relay"
+  default_prompt: "Use $self-host-supercollab to deploy and verify a private SuperCollab relay without exposing plaintext or project files."

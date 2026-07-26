@@ -1,0 +1,102 @@
+name: ${SUPERCOLLAB_PROJECT_NAME:-supercollab}
+
+services:
+  postgres:
+    image: supercollab-postgres:16-alpine
+    build:
+      context: ${SUPERCOLLAB_REPO_ROOT:-..}
+      dockerfile: deploy/postgres.Dockerfile
+    entrypoint: ["/docker-entrypoint-secret.sh"]
+    command: ["postgres"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: supercollab
+      POSTGRES_USER: supercollab_owner
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_owner_password
+      POSTGRES_APP_PASSWORD_FILE: /run/secrets/postgres_app_password
+    volumes:
+      - ${SUPERCOLLAB_RUNTIME_DIR:-./runtime}/postgres:/var/lib/postgresql/data
+      - ${SUPERCOLLAB_REPO_ROOT:-..}/deploy/postgres-init.sh:/docker-entrypoint-initdb.d/10-supercollab-app-role.sh:ro
+      - ${SUPERCOLLAB_REPO_ROOT:-..}/deploy/postgres-secret-entrypoint.sh:/docker-entrypoint-secret.sh:ro
+      - ${SUPERCOLLAB_REPO_ROOT:-..}/server/sql/postgres_schema.sql:/docker-entrypoint-initdb.d/20-supercollab-schema.sql:ro
+      - ${SUPERCOLLAB_REPO_ROOT:-..}/server/sql/chat_schema.sql:/docker-entrypoint-initdb.d/30-supercollab-chat.sql:ro
+    secrets:
+      - postgres_owner_password
+      - source: postgres_app_password_db
+        target: postgres_app_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supercollab_owner -d supercollab"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    shm_size: 256mb
+    logging:
+      driver: json-file
+      options:
+        max-size: 20m
+        max-file: "5"
+
+  api:
+    image: ${SUPERCOLLAB_IMAGE:-supercollab-api:0.7.0-alpha.4}
+    user: ${SUPERCOLLAB_API_UID:-10001}:${SUPERCOLLAB_API_GID:-10001}
+    build:
+      context: ${SUPERCOLLAB_REPO_ROOT:-..}
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SUPERCOLLAB_PUBLIC_URL: ${SUPERCOLLAB_PUBLIC_URL:-http://127.0.0.1:8731}
+      SUPERCOLLAB_PG_HOST: postgres
+      SUPERCOLLAB_PG_PORT: "5432"
+      SUPERCOLLAB_PG_DATABASE: supercollab
+      SUPERCOLLAB_PG_USER: supercollab_app
+      SUPERCOLLAB_PG_PASSWORD_FILE: /run/secrets/postgres_app_password
+      SUPERCOLLAB_AUTH_PEPPER_FILE: /run/secrets/server_pepper
+      SUPERCOLLAB_ACCOUNT_SIGNUP: ${SUPERCOLLAB_ACCOUNT_SIGNUP:-true}
+    ports:
+      - 127.0.0.1:${SUPERCOLLAB_PORT:-8731}:8731
+    secrets:
+      - source: postgres_app_password_api
+        target: postgres_app_password
+      - server_pepper
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8731/health', timeout=2).read()"]
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 20m
+        max-file: "5"
+
+secrets:
+  postgres_owner_password:
+    file: ${SUPERCOLLAB_RUNTIME_DIR:-./runtime}/secrets/postgres_owner_password
+  postgres_app_password_db:
+    file: ${SUPERCOLLAB_RUNTIME_DIR:-./runtime}/secrets/postgres_app_password.db
+  postgres_app_password_api:
+    file: ${SUPERCOLLAB_RUNTIME_DIR:-./runtime}/secrets/postgres_app_password.api
+  server_pepper:
+    file: ${SUPERCOLLAB_RUNTIME_DIR:-./runtime}/secrets/server_pepper.b64

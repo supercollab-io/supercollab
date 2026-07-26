@@ -1,0 +1,98 @@
+name: npm-publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: supercollab-npm-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24.14.0"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+      - name: Install pinned OIDC-capable npm
+        run: npm install --global npm@12.0.1 --ignore-scripts
+      - name: Validate immutable release identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_name="$(node -p "require('./package.json').name")"
+          package_version="$(node -p "require('./package.json').version")"
+          package_license="$(node -p "require('./package.json').license || ''")"
+          repository_url="$(node -p "require('./package.json').repository.url")"
+          test "${GITHUB_REF_TYPE}" = "tag"
+          test "${package_name}" = "@supercollab/mcp"
+          test "v${package_version}" = "${GITHUB_REF_NAME}"
+          test "${repository_url}" = "git+https://github.com/supercollab-io/supercollab.git"
+          test "${package_license}" = "MIT"
+      - run: npm ci
+      - run: npm run check
+      - run: npm run test:e2e
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Resolve immutable publication state
+        id: publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_name="$(node -p "require('./package.json').name")"
+          package_version="$(node -p "require('./package.json').version")"
+          package_spec="${package_name}@${package_version}"
+          local_integrity="$(npm pack --dry-run --json | node -e '
+            let input = "";
+            process.stdin.setEncoding("utf8");
+            process.stdin.on("data", (chunk) => { input += chunk; });
+            process.stdin.on("end", () => process.stdout.write(JSON.parse(input)[0].integrity));
+          ')"
+          echo "local_integrity=${local_integrity}" >> "${GITHUB_OUTPUT}"
+
+          if ! npm view "${package_spec}" version >/dev/null 2>&1; then
+            echo "should_publish=true" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          published_git_head="$(npm view "${package_spec}" gitHead)"
+          published_integrity="$(npm view "${package_spec}" dist.integrity)"
+          test "${published_git_head}" = "${GITHUB_SHA}"
+          test "${published_integrity}" = "${local_integrity}"
+          echo "${package_spec} already exists and exactly matches ${GITHUB_SHA}"
+          echo "should_publish=false" >> "${GITHUB_OUTPUT}"
+      - name: Publish with npm Trusted Publishing
+        if: steps.publication.outputs.should_publish == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_tag="$(node -p "require('./package.json').version.includes('-') ? 'next' : 'latest'")"
+          npm publish --access public --tag "${release_tag}" --provenance
+      - name: Verify registry identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_name="$(node -p "require('./package.json').name")"
+          package_version="$(node -p "require('./package.json').version")"
+          package_spec="${package_name}@${package_version}"
+          for attempt in $(seq 1 10); do
+            published_git_head="$(npm view "${package_spec}" gitHead 2>/dev/null || true)"
+            published_integrity="$(npm view "${package_spec}" dist.integrity 2>/dev/null || true)"
+            if [[ "${published_git_head}" == "${GITHUB_SHA}" && "${published_integrity}" == "${{ steps.publication.outputs.local_integrity }}" ]]; then
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "registry identity did not converge to the release commit" >&2
+          exit 1

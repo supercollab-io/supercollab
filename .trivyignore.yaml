@@ -1,0 +1,6 @@
+misconfigurations:
+  - id: AVD-DS-0002
+    paths:
+      - deploy/postgres.Dockerfile
+    statement: The root entrypoint only prepares PGDATA and then execs the patched su-exec helper as postgres; the long-running database process is non-root.
+    expired_at: 2027-01-26

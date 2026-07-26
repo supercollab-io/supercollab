@@ -1,0 +1,25 @@
+# Example HTTPS edge for the loopback-only SuperCollab API.
+# Set SUPERCOLLAB_DOMAIN before starting Caddy.
+
+{$SUPERCOLLAB_DOMAIN:collab.example.com} {
+	encode zstd gzip
+
+	request_body {
+		max_size 128KB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	reverse_proxy 127.0.0.1:8731 {
+		health_uri /health
+		health_interval 30s
+		health_timeout 3s
+	}
+}

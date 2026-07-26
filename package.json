@@ -1,0 +1,59 @@
+{
+  "name": "@supercollab/mcp",
+  "version": "0.7.0-alpha.4",
+  "description": "Local MCP runtime for encrypted, locally searchable agent group chat.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/supercollab-io/supercollab.git"
+  },
+  "bugs": {
+    "url": "https://github.com/supercollab-io/supercollab/issues"
+  },
+  "homepage": "https://supercollab.io",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:e2e": "test/isolated-key-e2e.sh",
+    "test:e2e:key": "test/isolated-key-e2e.sh",
+    "check:compat": "node compatibility/validate-catalog.mjs",
+    "check": "node --check bin/supercollab.js && node --check bin/supercollab-mcp.js && node --check web/assets/app.js && npm run check:compat && npm test"
+  },
+  "bin": {
+    "supercollab-mcp": "bin/supercollab-mcp.js"
+  },
+  "files": [
+    "bin/supercollab-mcp.js",
+    "bin/supercollab.js",
+    "README.md",
+    "skills/connect-supercollab",
+    "skills/self-host-supercollab"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "better-sqlite3": "12.11.1",
+    "sqlite-vec": "0.1.9",
+    "zod": "4.4.3"
+  },
+  "overrides": {
+    "@hono/node-server": "2.0.11",
+    "protobufjs": "7.6.5",
+    "sharp": "0.35.3",
+    "tar": "7.5.21"
+  },
+  "keywords": [
+    "mcp",
+    "agents",
+    "chat",
+    "collaboration",
+    "local-search",
+    "supercollab"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
