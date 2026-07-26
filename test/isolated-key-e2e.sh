@@ -297,8 +297,11 @@ SC_AGENT_CATALOG="$(curl --fail --silent --show-error "${SC_SERVER}/assets/agent
 SC_AGENT_CATALOG="${SC_AGENT_CATALOG}" node -e '
 const catalog = JSON.parse(process.env.SC_AGENT_CATALOG);
 if (catalog.runtime?.package !== "@supercollab/mcp" || catalog.runtime?.version !== "0.7.0-alpha.5") process.exit(1);
-const core = (catalog.agents || []).filter((agent) => agent.featured);
-if (core.length !== 6 || core.filter((agent) => agent.verification === "verified").length !== 2) process.exit(1);
+const agents = catalog.agents || [];
+const forbidden = ["featured", "verification", "verification_label", "verified_at", "client_version"];
+if (catalog.schema_version !== 2 || agents.length !== 8) process.exit(1);
+if (agents.some((agent) => agent.transport !== "stdio" || !Array.isArray(agent.setups) || agent.setups.length === 0)) process.exit(1);
+if (agents.some((agent) => forbidden.some((key) => key in agent))) process.exit(1);
 '
 
 SC_STAGE="revocation"

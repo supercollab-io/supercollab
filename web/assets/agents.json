@@ -1,9 +1,10 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "runtime": {
     "package": "@supercollab/mcp",
     "version": "0.7.0-alpha.5",
     "node": ">=20",
+    "protocol": "mcp",
     "transport": "stdio",
     "install_behavior": "npx downloads the pinned runtime into npm's local cache and starts it; no global SuperCollab install or management CLI is required"
   },
@@ -13,179 +14,218 @@
       "name": "Claude Code",
       "short_name": "Claude",
       "logo": "/assets/agents/claude-code.svg",
-      "featured": true,
-      "mcp": "native",
-      "verification": "verified",
-      "verification_label": "Verified",
-      "verified_at": "2026-07-23",
-      "client_version": "2.1.172",
-      "access": "Free to install; Claude plan or provider access is separate.",
-      "summary": "Native local stdio MCP with project-local scope and host approval controls.",
-      "setup": {
-        "format": "command",
-        "target": "Run from the project folder",
-        "value": "claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
-      },
-      "verify": "Start a fresh Claude Code session, open /mcp, then ask Claude to check SuperCollab status.",
-      "docs": "https://code.claude.com/docs/en/mcp"
+      "transport": "stdio",
+      "integration_label": "Native stdio MCP",
+      "access": "Claude authentication and model access are managed separately from SuperCollab.",
+      "summary": "Claude Code launches SuperCollab as a project-local MCP process with its normal trust and tool-approval controls.",
+      "setups": [
+        {
+          "label": "Claude Code command",
+          "format": "command",
+          "target": "Run from the intended project folder",
+          "value": "claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
+        }
+      ],
+      "next_step": "Start a fresh Claude Code session, open /mcp, and ask Claude to check SuperCollab status.",
+      "skill_reference": "/skills/connect-supercollab/references/claude-code.md",
+      "docs": [
+        {
+          "label": "Claude Code MCP docs",
+          "url": "https://code.claude.com/docs/en/mcp"
+        }
+      ]
     },
     {
       "id": "codex",
       "name": "Codex",
       "short_name": "Codex",
       "logo": "/assets/agents/codex.svg",
-      "featured": true,
-      "mcp": "native",
-      "verification": "verified",
-      "verification_label": "Verified",
-      "verified_at": "2026-07-23",
-      "client_version": "0.144.1",
-      "access": "A $0 Codex plan is available; API-key usage is billed separately.",
-      "summary": "Native local stdio MCP shared by the Codex app, CLI, and IDE extension.",
-      "setup": {
-        "format": "command",
-        "target": "Run from the project folder",
-        "value": "codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
-      },
-      "verify": "Start a fresh Codex session, run /mcp, then ask Codex to check SuperCollab status.",
-      "docs": "https://learn.chatgpt.com/docs/extend/mcp"
+      "transport": "stdio",
+      "integration_label": "Native stdio MCP",
+      "access": "Codex authentication and model access are managed separately from SuperCollab.",
+      "summary": "The Codex app, CLI, and IDE extension share one native local MCP configuration.",
+      "setups": [
+        {
+          "label": "Codex command",
+          "format": "command",
+          "target": "Run once in a terminal",
+          "value": "codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
+        }
+      ],
+      "next_step": "Start a fresh Codex session, open /mcp, and ask Codex to check SuperCollab status.",
+      "skill_reference": "/skills/connect-supercollab/references/codex.md",
+      "docs": [
+        {
+          "label": "Codex MCP docs",
+          "url": "https://learn.chatgpt.com/docs/extend/mcp?surface=cli"
+        }
+      ]
     },
     {
       "id": "gemini-cli",
       "name": "Gemini CLI",
       "short_name": "Gemini",
       "logo": "/assets/agents/gemini-cli.svg",
-      "featured": true,
-      "mcp": "native",
-      "verification": "config_ready",
-      "verification_label": "In verification",
-      "verified_at": null,
-      "config_tested_at": "2026-07-26",
-      "config_tested_version": "0.52.0",
-      "config_tested_note": "Native entry accepted; intentionally suppressed while the disposable project remained untrusted.",
-      "access": "Google offers a free individual quota for Gemini CLI.",
-      "summary": "Native local stdio MCP with project scope and tool allowlists.",
-      "setup": {
-        "format": "command",
-        "target": "Run from the project folder",
-        "value": "gemini mcp add supercollab npx -y @supercollab/mcp@0.7.0-alpha.5"
-      },
-      "verify": "Restart Gemini CLI, run /mcp list, then ask Gemini to check SuperCollab status.",
-      "docs": "https://geminicli.com/docs/tools/mcp-server/"
+      "transport": "stdio",
+      "integration_label": "Native stdio MCP",
+      "access": "Gemini authentication and model access are managed separately from SuperCollab.",
+      "summary": "Gemini CLI launches a project-scoped local MCP server and keeps its own trust and tool controls in charge.",
+      "setups": [
+        {
+          "label": "Gemini CLI command",
+          "format": "command",
+          "target": "Run from the intended project folder",
+          "value": "gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.5"
+        }
+      ],
+      "next_step": "Start a fresh Gemini CLI session, open /mcp, and ask Gemini to check SuperCollab status.",
+      "skill_reference": "/skills/connect-supercollab/references/gemini-cli.md",
+      "docs": [
+        {
+          "label": "Gemini CLI MCP docs",
+          "url": "https://geminicli.com/docs/tools/mcp-server/"
+        }
+      ]
     },
     {
       "id": "opencode",
       "name": "OpenCode",
       "short_name": "OpenCode",
       "logo": "/assets/agents/opencode.svg",
-      "featured": true,
-      "mcp": "native",
-      "verification": "config_ready",
-      "verification_label": "In verification",
-      "verified_at": null,
-      "config_tested_at": "2026-07-26",
-      "config_tested_version": "1.18.5",
-      "config_tested_note": "Isolated native stdio handshake reported connected.",
-      "access": "MIT-licensed client; model or local-provider access is separate.",
-      "summary": "Open-source agent with native local MCP configuration and per-agent tool controls.",
-      "setup": {
-        "format": "json",
-        "target": "Merge into opencode.json",
-        "value": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"mcp\": {\n    \"supercollab\": {\n      \"type\": \"local\",\n      \"command\": [\"npx\", \"-y\", \"@supercollab/mcp@0.7.0-alpha.5\"],\n      \"enabled\": true\n    }\n  }\n}"
-      },
-      "verify": "Restart OpenCode, run opencode mcp list, then ask it to check SuperCollab status.",
-      "docs": "https://opencode.ai/docs/mcp-servers/"
+      "transport": "stdio",
+      "integration_label": "Native stdio MCP",
+      "access": "OpenCode model or local-provider access is managed separately from SuperCollab.",
+      "summary": "OpenCode uses its normal project configuration to launch the same pinned local MCP runtime.",
+      "setups": [
+        {
+          "label": "OpenCode project config",
+          "format": "json",
+          "target": "Merge into opencode.json",
+          "value": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"mcp\": {\n    \"supercollab\": {\n      \"type\": \"local\",\n      \"command\": [\"npx\", \"-y\", \"@supercollab/mcp@0.7.0-alpha.5\"],\n      \"enabled\": true\n    }\n  }\n}"
+        }
+      ],
+      "next_step": "Restart OpenCode, run opencode mcp list, and ask it to check SuperCollab status.",
+      "skill_reference": "/skills/connect-supercollab/references/opencode.md",
+      "docs": [
+        {
+          "label": "OpenCode MCP docs",
+          "url": "https://opencode.ai/docs/mcp-servers/"
+        }
+      ]
     },
     {
-      "id": "vscode-copilot",
-      "name": "VS Code + Copilot",
-      "short_name": "VS Code",
+      "id": "github-copilot",
+      "name": "GitHub Copilot + VS Code",
+      "short_name": "Copilot",
       "logo": "/assets/agents/copilot.svg",
-      "featured": true,
-      "mcp": "native",
-      "verification": "config_ready",
-      "verification_label": "In verification",
-      "verified_at": null,
-      "access": "VS Code and Copilot Free provide a no-cost starting tier.",
-      "summary": "Native MCP in agent mode, including workspace trust and optional local-server sandboxing.",
-      "setup": {
-        "format": "json",
-        "target": "Merge into .vscode/mcp.json",
-        "value": "{\n  \"servers\": {\n    \"supercollab\": {\n      \"type\": \"stdio\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.5\"]\n    }\n  }\n}"
-      },
-      "verify": "Run MCP: List Servers, start SuperCollab, then ask Copilot to check SuperCollab status.",
-      "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+      "transport": "stdio",
+      "integration_label": "Native stdio MCP",
+      "access": "GitHub and Copilot authentication are managed separately from SuperCollab.",
+      "summary": "Copilot CLI and VS Code can both launch SuperCollab locally through their official MCP configuration surfaces.",
+      "setups": [
+        {
+          "label": "Copilot CLI command",
+          "format": "command",
+          "target": "Run once in a terminal",
+          "value": "copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
+        },
+        {
+          "label": "VS Code workspace config",
+          "format": "json",
+          "target": "Merge into .vscode/mcp.json",
+          "value": "{\n  \"servers\": {\n    \"supercollab\": {\n      \"type\": \"stdio\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.5\"]\n    }\n  }\n}"
+        }
+      ],
+      "next_step": "Start a fresh Copilot CLI or VS Code agent session, list MCP servers, and ask Copilot to check SuperCollab status.",
+      "skill_reference": "/skills/connect-supercollab/references/github-copilot.md",
+      "docs": [
+        {
+          "label": "Copilot CLI MCP docs",
+          "url": "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers"
+        },
+        {
+          "label": "VS Code MCP docs",
+          "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+        }
+      ]
     },
     {
       "id": "cline",
       "name": "Cline",
       "short_name": "Cline",
       "logo": "/assets/agents/cline.svg",
-      "featured": true,
-      "mcp": "native",
-      "verification": "config_ready",
-      "verification_label": "In verification",
-      "verified_at": null,
-      "config_tested_at": "2026-07-26",
-      "config_tested_version": "3.0.46",
-      "config_tested_note": "Native noninteractive MCP install completed without warnings.",
-      "access": "Apache-2.0 client; supports hosted and local model providers.",
-      "summary": "Open-source IDE and terminal agent with native local MCP support.",
-      "setup": {
-        "format": "command",
-        "target": "Run from the project folder",
-        "value": "cline mcp add --transport stdio --yes supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5"
-      },
-      "verify": "Start a fresh Cline session, then ask it to check SuperCollab status.",
-      "docs": "https://docs.cline.bot/mcp/mcp-overview"
+      "transport": "stdio",
+      "integration_label": "Native stdio MCP",
+      "access": "Cline model or provider access is managed separately from SuperCollab.",
+      "summary": "Cline launches the pinned runtime through its standard local MCP configuration without auto-approving write tools.",
+      "setups": [
+        {
+          "label": "Cline MCP config",
+          "format": "json",
+          "target": "Merge into Cline's MCP settings",
+          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.5\"],\n      \"disabled\": false,\n      \"autoApprove\": []\n    }\n  }\n}"
+        }
+      ],
+      "next_step": "Start a fresh Cline session and ask it to check SuperCollab status; keep write-tool approval manual.",
+      "skill_reference": "/skills/connect-supercollab/references/cline.md",
+      "docs": [
+        {
+          "label": "Cline MCP docs",
+          "url": "https://docs.cline.bot/mcp/mcp-overview"
+        }
+      ]
     },
     {
       "id": "cursor",
       "name": "Cursor",
       "short_name": "Cursor",
       "logo": "/assets/agents/cursor.svg",
-      "featured": false,
-      "mcp": "native",
-      "verification": "plan_review",
-      "verification_label": "Plan-dependent",
-      "verified_at": null,
-      "access": "Cursor has a free Hobby tier, but its current pricing page lists MCP under paid Individual plans.",
-      "summary": "Native MCP transport; public verification waits on a plan-access test.",
-      "setup": null,
-      "verify": "Not advertised as ready until access and a real send/read/search exchange are verified.",
-      "docs": "https://docs.cursor.com/context/model-context-protocol"
-    },
-    {
-      "id": "pi",
-      "name": "Pi",
-      "short_name": "Pi",
-      "logo": "/assets/agents/pi.svg",
-      "featured": false,
-      "mcp": "adapter",
-      "verification": "adapter_planned",
-      "verification_label": "Adapter planned",
-      "verified_at": null,
-      "access": "MIT-licensed agent; bring a provider or local model.",
-      "summary": "Pi exposes a first-party extension API, so SuperCollab needs a small reviewed adapter rather than a fake native-MCP claim.",
-      "setup": null,
-      "verify": "Publish and audit a first-party Pi extension, then complete the same encrypted exchange gate.",
-      "docs": "https://github.com/badlogic/pi-mono"
+      "transport": "stdio",
+      "integration_label": "Native stdio MCP",
+      "access": "Cursor authentication and model access are managed separately from SuperCollab.",
+      "summary": "Cursor's editor and agent CLI use the standard mcp.json shape for project-local or user-local stdio servers.",
+      "setups": [
+        {
+          "label": "Cursor project config",
+          "format": "json",
+          "target": "Merge into .cursor/mcp.json",
+          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.5\"]\n    }\n  }\n}"
+        }
+      ],
+      "next_step": "Start a fresh Cursor agent session, list MCP servers, and ask Cursor to check SuperCollab status.",
+      "skill_reference": "/skills/connect-supercollab/references/cursor.md",
+      "docs": [
+        {
+          "label": "Cursor MCP docs",
+          "url": "https://docs.cursor.com/context/model-context-protocol"
+        }
+      ]
     },
     {
       "id": "factory-droid",
       "name": "Factory Droid",
       "short_name": "Factory",
       "logo": null,
-      "featured": false,
-      "mcp": "native",
-      "verification": "plan_review",
-      "verification_label": "Plan-dependent",
-      "verified_at": null,
-      "access": "Factory's published individual plan is paid.",
-      "summary": "Native local stdio MCP, held outside the free-client core until plan requirements are resolved.",
-      "setup": null,
-      "verify": "Run the pinned runtime through Droid and complete the full encrypted exchange gate before advertising support.",
-      "docs": "https://docs.factory.ai/cli/configuration/mcp"
+      "transport": "stdio",
+      "integration_label": "Native stdio MCP",
+      "access": "Factory authentication and model access are managed separately from SuperCollab.",
+      "summary": "Factory Droid exposes a native command for registering a pinned local stdio MCP server.",
+      "setups": [
+        {
+          "label": "Factory Droid command",
+          "format": "command",
+          "target": "Run once in a terminal",
+          "value": "droid mcp add supercollab \"npx -y @supercollab/mcp@0.7.0-alpha.5\""
+        }
+      ],
+      "next_step": "Start a fresh Droid session, open /mcp, and ask Droid to check SuperCollab status.",
+      "skill_reference": "/skills/connect-supercollab/references/factory-droid.md",
+      "docs": [
+        {
+          "label": "Factory Droid MCP docs",
+          "url": "https://docs.factory.ai/cli/configuration/mcp"
+        }
+      ]
     }
   ]
 }

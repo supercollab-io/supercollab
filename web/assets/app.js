@@ -141,8 +141,8 @@ function renderAgentDetail(agent) {
   headingCopy.append(make('h3', '', agent.name));
   const status = make('div', 'status-row');
   status.append(
-    make('span', `status-pill ${agent.verification === 'verified' ? 'verified' : ''}`, agent.verification_label),
-    make('span', 'native-label', agent.mcp === 'native' ? 'Native MCP' : 'First-party adapter'),
+    make('span', 'status-pill', agent.integration_label),
+    make('span', 'transport-label', 'Local process'),
   );
   headingCopy.append(status);
   heading.append(headingCopy);
@@ -155,21 +155,17 @@ function renderAgentDetail(agent) {
   first.content.append(copyBox(prompt));
   steps.append(first.row);
 
-  if (agent.setup) {
-    const second = onboardingStep('02', 'npm delivers the local runtime', 'The exact version is pinned. Nothing is installed globally, and there is no SuperCollab command interface to learn.');
+  const second = onboardingStep('02', 'Use the host’s native setup', 'The shared skill can apply this safely. The exact official command or config shape is available here when you need it.');
+  for (const setup of agent.setups) {
     const technical = make('details', 'technical-setup');
-    technical.append(make('summary', '', 'Show the native setup change'));
-    const target = make('p', 'setup-target', agent.setup.target);
-    technical.append(target, copyBox(agent.setup.value, 'setup'));
+    technical.append(make('summary', '', setup.label));
+    const target = make('p', 'setup-target', setup.target);
+    technical.append(target, copyBox(setup.value, 'setup'));
     second.content.append(technical);
-    steps.append(second.row);
-  } else {
-    steps.append(onboardingStep('02', 'Not advertised as ready yet', agent.verify).row);
   }
+  steps.append(second.row);
 
-  steps.append(onboardingStep('03', 'Manage it in natural language', agent.setup
-    ? agent.verify
-    : 'The compatibility lab will not generate an install command until the security and real-client gates pass.').row);
+  steps.append(onboardingStep('03', 'Restart, then use natural language', agent.next_step).row);
   detail.append(steps);
 
   const access = make('p', 'access-note');
@@ -177,27 +173,30 @@ function renderAgentDetail(agent) {
   access.append(accessStrong, document.createTextNode(agent.access));
   detail.append(access);
 
-  const docs = make('a', 'docs-link', 'View the host’s official MCP docs ↗');
-  docs.href = agent.docs;
-  docs.target = '_blank';
-  docs.rel = 'noopener noreferrer';
+  const docs = make('div', 'docs-links');
+  const guide = make('a', 'docs-link', 'SuperCollab host guide');
+  guide.href = agent.skill_reference;
+  docs.append(guide);
+  for (const source of agent.docs) {
+    const link = make('a', 'docs-link', `${source.label} ↗`);
+    link.href = source.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    docs.append(link);
+  }
   detail.append(docs);
 }
 
 function renderCatalog(catalog) {
   const grid = document.querySelector('[data-agent-grid]');
-  const lab = document.querySelector('[data-lab-list]');
   const count = document.querySelector('[data-matrix-count]');
-  const labCount = document.querySelector('[data-lab-count]');
-  if (!grid || !lab) return;
+  if (!grid || !count) return;
 
-  const featured = catalog.agents.filter((agent) => agent.featured);
-  const experimental = catalog.agents.filter((agent) => !agent.featured);
-  const verifiedCount = featured.filter((agent) => agent.verification === 'verified').length;
-  count.textContent = `${verifiedCount} verified · ${featured.length} core`;
-  labCount.textContent = `${experimental.length} tracked`;
+  const agents = catalog.agents;
+  count.textContent = `${agents.length} agents · local stdio MCP`;
+  grid.replaceChildren();
 
-  const cards = featured.map((agent, index) => {
+  const cards = agents.map((agent, index) => {
     const card = make('button', `agent-card${index === 0 ? ' active' : ''}`);
     card.type = 'button';
     card.dataset.agentId = agent.id;
@@ -206,7 +205,7 @@ function renderCatalog(catalog) {
     const copy = make('span', 'agent-card-copy');
     copy.append(
       make('strong', '', agent.name),
-      make('small', agent.verification === 'verified' ? 'verified' : '', agent.verification_label),
+      make('small', '', agent.integration_label),
     );
     card.append(copy);
     card.addEventListener('click', () => {
@@ -221,36 +220,19 @@ function renderCatalog(catalog) {
     return card;
   });
 
-  for (const agent of experimental) {
-    const item = make('button', 'lab-item');
-    item.type = 'button';
-    addLogo(item, agent, 'lab-icon');
-    const copy = make('div');
-    copy.append(make('strong', '', agent.name), make('small', '', agent.verification_label));
-    item.append(copy);
-    item.addEventListener('click', () => {
-      cards.forEach((card) => {
-        card.classList.remove('active');
-        card.setAttribute('aria-pressed', 'false');
-      });
-      renderAgentDetail(agent);
-    });
-    lab.append(item);
-  }
-
-  if (featured[0]) renderAgentDetail(featured[0]);
+  if (agents[0]) renderAgentDetail(agents[0]);
 }
 
 fetch('/assets/agents.json', { headers: { accept: 'application/json' } })
   .then((response) => {
-    if (!response.ok) throw new Error(`compatibility matrix returned ${response.status}`);
+    if (!response.ok) throw new Error(`agent catalog returned ${response.status}`);
     return response.json();
   })
   .then(renderCatalog)
   .catch((error) => {
     const grid = document.querySelector('[data-agent-grid]');
     const detail = document.querySelector('[data-agent-detail]');
-    if (grid) grid.textContent = 'The compatibility matrix could not be loaded.';
+    if (grid) grid.textContent = 'The agent catalog could not be loaded.';
     if (detail) {
       detail.replaceChildren(make('p', 'load-error', `${error.message}. Use /skill.md for the setup guide.`));
     }

@@ -52,10 +52,13 @@ Every host launches the same pinned local command; no global install is needed.
 |---|---|
 | Claude Code | `claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5` |
 | Codex | `codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5` |
-| Gemini CLI | `gemini mcp add supercollab npx -y @supercollab/mcp@0.7.0-alpha.5` |
+| Gemini CLI | `gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.5` |
 | OpenCode | local `mcp.supercollab.command` array in `opencode.json` |
+| GitHub Copilot CLI | `copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5` |
 | VS Code + Copilot | stdio server in `.vscode/mcp.json` |
-| Cline | local server in `.cline/mcp.json` |
+| Cline | local `mcpServers.supercollab` entry in Cline's MCP settings |
+| Cursor | local `mcpServers.supercollab` entry in `.cursor/mcp.json` |
+| Factory Droid | `droid mcp add supercollab "npx -y @supercollab/mcp@0.7.0-alpha.5"` |
 
 The onboarding skill must inspect an existing `supercollab` entry, preserve
 unrelated configuration, and obtain approval before replacing a different
@@ -85,6 +88,7 @@ verifies manual-mode send rejection without a network request.
 non-member rejection, one-time invitation, bidirectional encrypted exchange,
 plaintext rejection, local search, key rotation, and revocation.
 
-The real-client gate additionally runs the published package in a disposable
-tmux environment and proves the host can complete the same encrypted exchange.
-Configuration review alone is not compatibility verification.
+The catalog gate separately checks that every host recipe uses its documented
+local stdio shape and pins the same runtime. Host logins and subscriptions are
+not part of SuperCollab conformance. If a future host needs another transport,
+that transport receives its own boundary tests before host recipes use it.

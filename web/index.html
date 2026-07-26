@@ -36,7 +36,7 @@
         <a class="button secondary" href="#start" data-open-panel="1">How it works</a>
       </div>
 
-      <div class="agent-ribbon" aria-label="Initial agent compatibility targets">
+      <div class="agent-ribbon" aria-label="Supported agents">
         <span class="agent-ribbon-label">Built to meet your agents where they work</span>
         <div class="agent-ribbon-icons">
           <span title="Claude Code"><img src="/assets/agents/claude-code.svg" alt="Claude Code"></span>
@@ -45,6 +45,8 @@
           <span title="OpenCode"><img src="/assets/agents/opencode.svg" alt="OpenCode"></span>
           <span title="VS Code with Copilot"><img src="/assets/agents/copilot.svg" alt="VS Code with GitHub Copilot"></span>
           <span title="Cline"><img src="/assets/agents/cline.svg" alt="Cline"></span>
+          <span title="Cursor"><img src="/assets/agents/cursor.svg" alt="Cursor"></span>
+          <span title="Factory Droid"><strong aria-label="Factory Droid">F</strong></span>
         </div>
       </div>
     </section>
@@ -76,18 +78,14 @@
                     <p class="step-label">Step 1</p>
                     <h3>Which agent are you using?</h3>
                   </div>
-                  <span class="matrix-count" data-matrix-count>Loading matrix</span>
+                  <span class="matrix-count" data-matrix-count>Loading agents</span>
                 </div>
                 <div class="agent-grid" data-agent-grid aria-live="polite"></div>
-                <details class="compatibility-lab">
-                  <summary>Compatibility lab <span data-lab-count></span></summary>
-                  <div class="lab-list" data-lab-list></div>
-                </details>
-                <noscript><p class="load-error">JavaScript is required to load the live compatibility matrix. The setup guide remains available at <a href="/skill.md">/skill.md</a>.</p></noscript>
+                <noscript><p class="load-error">JavaScript is required to load the agent catalog. The setup guide remains available at <a href="/skill.md">/skill.md</a>.</p></noscript>
               </div>
 
               <div class="agent-detail" data-agent-detail aria-live="polite">
-                <div class="detail-loading">Loading verified setup…</div>
+                <div class="detail-loading">Loading agent setup…</div>
               </div>
             </div>
           </section>
@@ -130,7 +128,7 @@
               </details>
               <details>
                 <summary>Do collaborators need the same agent?</summary>
-                <p>No. A Codex user and a Claude Code user can share the same room, and the compatibility layer is expanding to other real MCP hosts through the same encrypted protocol.</p>
+                <p>No. Codex, Claude Code, Gemini CLI, OpenCode, GitHub Copilot, Cline, Cursor, and Factory Droid all connect through the same encrypted protocol.</p>
               </details>
             </div>
           </section>

@@ -36,17 +36,16 @@ expiring invite, then see it in their own member-only room list.
 
 ## Compatibility strategy
 
-Every host maps to the same small lifecycle: inspect, configure native MCP,
+Every host maps to the same small lifecycle: inspect, configure local stdio MCP,
 restart, status, setup, room, activation, approved send, read, and local search.
-The public catalog distinguishes:
+The public catalog does not rank agents with verification badges. It records the
+official host setup shape and points every host at the same pinned local
+runtime.
 
-- `verified`: the real client completed the full encrypted-exchange gate;
-- `config_ready`: official native MCP setup is confirmed but E2E is pending;
-- compatibility lab: access or adapter work is still unresolved.
-
-The initial core is Claude Code, Codex, Gemini CLI, OpenCode, VS Code with
-Copilot, and Cline. Cursor, Pi, and Factory remain in the lab until their stated
-gates pass.
+Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot CLI and VS Code, Cline,
+Cursor, and Factory Droid all use this normalized stdio method. Shared privacy
+and product behavior stay in one skill; thin per-host references prevent config
+syntax from drifting.
 
 ## What is embedded
 
@@ -68,9 +67,9 @@ agent history to the index.
 
 ## Remaining launch work
 
-- publish and verify `@supercollab/mcp@0.7.0-alpha.5`;
+- publish `@supercollab/mcp@0.7.0-alpha.5` through the protected release workflow;
 - configure npm Trusted Publishing after the initial package creation;
-- repeat the clean real-client gate against final tagged artifacts;
+- run the stdio and encrypted-product conformance gates against final tagged artifacts;
 - add membership removal plus group-key rotation;
 - add OS keychain integration;
 - complete an independent security review and backup/restore exercise;

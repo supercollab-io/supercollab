@@ -311,10 +311,15 @@ img {
   height: 21px;
 }
 
+.agent-ribbon-icons strong {
+  color: #d6d9df;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
 img[src$="/opencode.svg"],
 img[src$="/cline.svg"],
-img[src$="/cursor.svg"],
-img[src$="/pi.svg"] {
+img[src$="/cursor.svg"] {
   filter: invert(1);
 }
 
@@ -502,7 +507,6 @@ img[src$="/pi.svg"] {
 }
 
 .agent-icon,
-.lab-icon,
 .detail-icon {
   display: grid;
   flex: 0 0 auto;
@@ -546,95 +550,6 @@ img[src$="/pi.svg"] {
   font-size: 8px;
   letter-spacing: 0.035em;
   text-transform: uppercase;
-}
-
-.agent-card small.verified {
-  color: #77c99b;
-}
-
-.compatibility-lab {
-  margin-top: 14px;
-  border-top: 1px solid var(--line);
-}
-
-.compatibility-lab summary {
-  padding: 15px 2px 8px;
-  color: #777e88;
-  cursor: pointer;
-  font-size: 11px;
-  font-weight: 600;
-  list-style: none;
-}
-
-.compatibility-lab summary::-webkit-details-marker {
-  display: none;
-}
-
-.compatibility-lab summary::before {
-  display: inline-block;
-  width: 18px;
-  color: #515760;
-  content: "+";
-  font-family: var(--mono);
-}
-
-.compatibility-lab[open] summary::before {
-  content: "−";
-}
-
-.compatibility-lab summary span {
-  margin-left: 6px;
-  color: #4f5660;
-}
-
-.lab-list {
-  display: grid;
-  padding-top: 5px;
-  gap: 6px;
-}
-
-.lab-item {
-  display: flex;
-  padding: 10px 11px;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.065);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.012);
-}
-
-.lab-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  color: #b7bbc2;
-  font-size: 10px;
-  font-weight: 750;
-}
-
-.lab-icon img {
-  width: 16px;
-  height: 16px;
-}
-
-.lab-item div {
-  min-width: 0;
-}
-
-.lab-item strong,
-.lab-item small {
-  display: block;
-}
-
-.lab-item strong {
-  color: #bbbfc6;
-  font-size: 11px;
-}
-
-.lab-item small {
-  margin-top: 1px;
-  color: #646a74;
-  font-size: 9px;
 }
 
 .agent-detail {
@@ -700,13 +615,7 @@ img[src$="/pi.svg"] {
   text-transform: uppercase;
 }
 
-.status-pill.verified {
-  border-color: rgba(121, 242, 173, 0.15);
-  background: rgba(121, 242, 173, 0.04);
-  color: #79c99c;
-}
-
-.native-label {
+.transport-label {
   color: #5f6670;
   font-family: var(--mono);
   font-size: 9px;
@@ -821,10 +730,15 @@ img[src$="/pi.svg"] {
 }
 
 .docs-link {
-  display: inline-block;
-  margin-top: 10px;
   color: #789ee2;
   font-size: 10px;
+}
+
+.docs-links {
+  display: flex;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 8px 16px;
 }
 
 .faq-panel {

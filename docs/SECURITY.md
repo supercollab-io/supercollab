@@ -70,7 +70,7 @@ A leaked database does not contain raw account keys, but the database plus serve
 ## Public-release gates
 
 - immutable npm-runtime and container releases with checksums, provenance, and SBOM;
-- fresh-install real-client tests on supported systems;
+- fresh-install local stdio MCP conformance against the published runtime;
 - cross-account, cross-room, invite replay/expiry, agent revocation, and rotation tests;
 - dependency, image, secret, and static security scans;
 - backup/restore exercise;

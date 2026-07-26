@@ -8,6 +8,7 @@ OpenCode supports local MCP servers in `opencode.json`.
 
    ```json
    {
+     "$schema": "https://opencode.ai/config.json",
      "mcp": {
        "supercollab": {
          "type": "local",
@@ -21,8 +22,7 @@ OpenCode supports local MCP servers in `opencode.json`.
 3. Restart OpenCode, run `opencode mcp list`, and ask it to check SuperCollab
    status. Perform account and room setup only through MCP tools.
 
-Do not replace the whole JSON file. OpenCode `1.18.5` completed an isolated
-native stdio handshake on 2026-07-26. It remains configuration-ready, not
-real-client verified, until the complete encrypted exchange gate passes.
+Do not replace the whole JSON file or weaken per-agent tool permissions.
+OpenCode provider access is separate from SuperCollab.
 
 Official reference: <https://opencode.ai/docs/mcp-servers/>

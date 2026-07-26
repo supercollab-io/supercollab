@@ -1,4 +1,4 @@
 interface:
   display_name: "Connect SuperCollab"
-  short_description: "Connect any supported agent to a private room"
-  default_prompt: "Use $connect-supercollab to connect this workspace to a secure SuperCollab room through my agent's native MCP setup. Keep sharing off until I choose or join a room."
+  short_description: "Connect your coding agent to a private room"
+  default_prompt: "Use $connect-supercollab to connect this workspace to a secure SuperCollab room using the current agent and its native local MCP setup. Keep sharing off until I choose or join a room."

@@ -7,19 +7,38 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = (name) => JSON.parse(fs.readFileSync(path.join(root, name), 'utf8'));
 const catalog = readJson('web/assets/agents.json');
 const pkg = readJson('package.json');
-const evidenceSchema = readJson('compatibility/evidence.schema.json');
 const errors = [];
-const allowedVerification = new Set(['verified', 'config_ready', 'plan_review', 'adapter_planned']);
-const allowedMcp = new Set(['native', 'adapter']);
 const ids = new Set();
+const expectedIds = new Set([
+  'claude-code',
+  'codex',
+  'gemini-cli',
+  'opencode',
+  'github-copilot',
+  'cline',
+  'cursor',
+  'factory-droid',
+]);
+const forbiddenCatalogKeys = new Set([
+  'featured',
+  'verification',
+  'verification_label',
+  'verified_at',
+  'client_version',
+  'config_tested_at',
+  'config_tested_version',
+  'config_tested_note',
+  'verify',
+]);
 
 function expect(condition, message) {
   if (!condition) errors.push(message);
 }
 
-expect(catalog.schema_version === 1, 'catalog schema_version must be 1');
+expect(catalog.schema_version === 2, 'catalog schema_version must be 2');
 expect(catalog.runtime?.package === pkg.name, 'catalog runtime package must match package.json');
 expect(catalog.runtime?.version === pkg.version, 'catalog runtime version must match package.json');
+expect(catalog.runtime?.protocol === 'mcp', 'public runtime protocol must be MCP');
 expect(catalog.runtime?.transport === 'stdio', 'public runtime transport must be stdio');
 expect(pkg.homepage === 'https://supercollab.io', 'package homepage must use the canonical domain');
 expect(Array.isArray(catalog.agents), 'catalog agents must be an array');
@@ -34,21 +53,24 @@ expect(
   runtimeSource.includes(`'${pkg.homepage}'`),
   'runtime default relay must use the canonical domain',
 );
+
 for (const [index, agent] of (catalog.agents || []).entries()) {
   const label = agent?.id || `agent[${index}]`;
   expect(/^[a-z0-9-]+$/.test(agent?.id || ''), `${label}: invalid id`);
   expect(!ids.has(agent?.id), `${label}: duplicate id`);
   ids.add(agent?.id);
+  expect(expectedIds.has(agent?.id), `${label}: agent is not in the supported host set`);
   expect(typeof agent?.name === 'string' && agent.name.length > 1, `${label}: missing name`);
   expect(typeof agent?.short_name === 'string' && agent.short_name.length > 0, `${label}: missing short_name`);
-  expect(typeof agent?.featured === 'boolean', `${label}: featured must be boolean`);
-  expect(allowedMcp.has(agent?.mcp), `${label}: unsupported mcp type`);
-  expect(allowedVerification.has(agent?.verification), `${label}: unsupported verification state`);
-  expect(typeof agent?.verification_label === 'string', `${label}: missing verification label`);
-  expect(typeof agent?.access === 'string' && agent.access.length > 10, `${label}: access terms are missing`);
-  expect(typeof agent?.summary === 'string' && agent.summary.length > 20, `${label}: summary is missing`);
-  expect(typeof agent?.verify === 'string' && agent.verify.length > 20, `${label}: verification guidance is missing`);
-  expect(/^https:\/\//.test(agent?.docs || ''), `${label}: docs must use HTTPS`);
+  expect(agent?.transport === 'stdio', `${label}: supported hosts must use local stdio`);
+  expect(agent?.integration_label === 'Native stdio MCP', `${label}: incorrect integration label`);
+  expect(typeof agent?.access === 'string' && agent.access.length > 20, `${label}: host boundary is missing`);
+  expect(typeof agent?.summary === 'string' && agent.summary.length > 30, `${label}: summary is missing`);
+  expect(typeof agent?.next_step === 'string' && agent.next_step.length > 30, `${label}: next step is missing`);
+
+  for (const key of forbiddenCatalogKeys) {
+    expect(!(key in (agent || {})), `${label}: public catalog must not contain ${key}`);
+  }
 
   if (agent.logo !== null) {
     expect(/^\/assets\/agents\/[a-z0-9-]+\.svg$/.test(agent.logo || ''), `${label}: unsafe logo path`);
@@ -56,56 +78,49 @@ for (const [index, agent] of (catalog.agents || []).entries()) {
     expect(fs.existsSync(logoFile), `${label}: logo file does not exist`);
   }
 
-  if (agent.featured) {
-    expect(agent.mcp === 'native', `${label}: featured clients must use native MCP`);
-    expect(Boolean(agent.setup), `${label}: featured clients need a setup recipe`);
+  expect(Array.isArray(agent.setups) && agent.setups.length > 0, `${label}: at least one native setup is required`);
+  for (const [setupIndex, setup] of (agent.setups || []).entries()) {
+    const setupLabel = `${label}: setup[${setupIndex}]`;
+    expect(typeof setup?.label === 'string' && setup.label.length > 3, `${setupLabel}: label is missing`);
+    expect(['command', 'json'].includes(setup?.format), `${setupLabel}: invalid format`);
+    expect(typeof setup?.target === 'string' && setup.target.length > 0, `${setupLabel}: target is missing`);
+    expect(typeof setup?.value === 'string' && setup.value.includes(runtimeSpec), `${setupLabel}: must pin ${runtimeSpec}`);
+    expect(!setup?.value?.includes('@latest'), `${setupLabel}: must not use @latest`);
+    expect(!setup?.value?.includes('@supercollab/cli'), `${setupLabel}: exposes the retired CLI package`);
   }
 
-  if (agent.setup) {
-    expect(['command', 'json'].includes(agent.setup.format), `${label}: invalid setup format`);
-    expect(typeof agent.setup.target === 'string' && agent.setup.target.length > 0, `${label}: setup target is missing`);
-    expect(typeof agent.setup.value === 'string' && agent.setup.value.includes(runtimeSpec), `${label}: setup must pin ${runtimeSpec}`);
-    expect(!agent.setup.value.includes('@latest'), `${label}: setup must not use @latest`);
-    expect(!agent.setup.value.includes('@supercollab/cli'), `${label}: setup exposes the retired CLI package`);
+  expect(/^\/skills\/connect-supercollab\/references\/[a-z0-9-]+\.md$/.test(agent?.skill_reference || ''), `${label}: invalid skill reference`);
+  const referenceFile = path.join(root, String(agent?.skill_reference || '').replace(/^\//, ''));
+  expect(fs.existsSync(referenceFile), `${label}: skill reference does not exist`);
+  if (fs.existsSync(referenceFile)) {
+    const reference = fs.readFileSync(referenceFile, 'utf8');
+    expect(reference.includes(runtimeSpec), `${label}: skill reference must pin ${runtimeSpec}`);
   }
 
-  if (agent.verification === 'verified') {
-    expect(/^\d{4}-\d{2}-\d{2}$/.test(agent.verified_at || ''), `${label}: verified clients need a verification date`);
-    expect(typeof agent.client_version === 'string' && agent.client_version.length > 0, `${label}: verified clients need a client version`);
-    expect(Boolean(agent.setup), `${label}: verified clients need a setup recipe`);
-  } else {
-    expect(agent.verified_at === null, `${label}: unverified clients must have verified_at null`);
-  }
-
-  if (agent.config_tested_at !== undefined) {
-    expect(agent.verification === 'config_ready', `${label}: config smoke evidence belongs only on config_ready clients`);
-    expect(/^\d{4}-\d{2}-\d{2}$/.test(agent.config_tested_at || ''), `${label}: invalid config smoke date`);
-    expect(typeof agent.config_tested_version === 'string' && agent.config_tested_version.length > 0, `${label}: config smoke needs a client version`);
-    expect(typeof agent.config_tested_note === 'string' && agent.config_tested_note.length > 20, `${label}: config smoke needs an evidence note`);
+  expect(Array.isArray(agent.docs) && agent.docs.length > 0, `${label}: official docs are missing`);
+  for (const [docsIndex, source] of (agent.docs || []).entries()) {
+    const docsLabel = `${label}: docs[${docsIndex}]`;
+    expect(typeof source?.label === 'string' && source.label.length > 3, `${docsLabel}: label is missing`);
+    expect(/^https:\/\//.test(source?.url || ''), `${docsLabel}: URL must use HTTPS`);
   }
 }
 
-const featured = (catalog.agents || []).filter((agent) => agent.featured);
-expect(featured.length === 6, `core catalog must contain exactly 6 clients, found ${featured.length}`);
-expect(featured.filter((agent) => agent.verification === 'verified').length >= 2, 'core catalog must retain at least two real-client verification anchors');
+expect(ids.size === expectedIds.size, `catalog must contain exactly ${expectedIds.size} supported agents`);
+for (const id of expectedIds) expect(ids.has(id), `catalog is missing ${id}`);
 expect(fs.existsSync(path.join(root, 'web/assets/agents/ATTRIBUTION.md')), 'logo attribution is missing');
-expect(
-  evidenceSchema.properties?.runtime?.const === runtimeSpec,
-  'compatibility evidence schema must pin the release runtime',
-);
-expect(
-  evidenceSchema.$id?.startsWith(`${pkg.homepage}/`),
-  'compatibility evidence schema must use the canonical domain',
-);
-const labLauncher = path.join(root, 'compatibility/launch-lab.sh');
-expect(fs.existsSync(labLauncher), 'compatibility lab launcher is missing');
-if (fs.existsSync(labLauncher) && process.platform !== 'win32') {
-  expect((fs.statSync(labLauncher).mode & 0o111) !== 0, 'compatibility lab launcher must be executable');
-}
+expect(!fs.existsSync(path.join(root, 'skills/connect-supercollab/references/compatibility-lab.md')), 'compatibility lab reference must not remain');
+
+const publicSurface = [
+  'web/index.html',
+  'web/assets/app.js',
+  'web/assets/styles.css',
+  'web/assets/agents.json',
+].map((name) => fs.readFileSync(path.join(root, name), 'utf8')).join('\n');
+expect(!/\bverified\b|verification|compatibility[ -]lab|data-lab|lab-item/i.test(publicSurface), 'frontend must not expose verification or lab state');
 
 if (errors.length) {
   process.stderr.write(`Compatibility catalog failed (${errors.length}):\n- ${errors.join('\n- ')}\n`);
   process.exitCode = 1;
 } else {
-  process.stdout.write(`Compatibility catalog OK: ${featured.length} core, ${catalog.agents.length - featured.length} lab, runtime ${runtimeSpec}\n`);
+  process.stdout.write(`Compatibility catalog OK: ${catalog.agents.length} agents, local stdio MCP, runtime ${runtimeSpec}\n`);
 }

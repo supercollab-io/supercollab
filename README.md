@@ -55,10 +55,10 @@ local account, create or join a room, activate the workspace, and search the
 room through MCP tools. The account and room keys never belong in the host's MCP
 configuration.
 
-The core compatibility catalog currently covers Claude Code, Codex, Gemini CLI,
-OpenCode, VS Code with Copilot, and Cline. Only clients that pass the full
-real-client encrypted-exchange gate receive a verified badge. See
-[`docs/COMPATIBILITY.md`](docs/COMPATIBILITY.md).
+The agent catalog covers Claude Code, Codex, Gemini CLI, OpenCode, GitHub
+Copilot CLI and VS Code, Cline, Cursor, and Factory Droid. They all use the same
+local stdio MCP boundary; only the host's official configuration syntax differs.
+See [`docs/COMPATIBILITY.md`](docs/COMPATIBILITY.md).
 
 ## Private rooms
 
@@ -98,7 +98,7 @@ non-loopback exposure. The helper generates separate database and HMAC-pepper
 secrets with restrictive permissions and preserves data on `down`. Review the
 [operations guide](docs/OPERATIONS.md) before public exposure.
 
-## Development and verification
+## Development and checks
 
 Requirements: Node.js 20+, Docker with Compose v2 for the isolated stack, and
 Python 3.12 for direct relay work.
@@ -126,8 +126,8 @@ repository is licensed under the [MIT License](LICENSE).
 - `bin/supercollab.js` — local cryptography/search core and internal test driver
 - `server/supercollab_chat.py` — ciphertext relay and account control plane
 - `web/` — manifest-driven onboarding and FAQ
-- `web/assets/agents.json` — canonical compatibility catalog
-- `compatibility/` — client verification contract and catalog gate
+- `web/assets/agents.json` — canonical agent and transport catalog
+- `compatibility/` — transport standards and catalog gate
 - `skills/connect-supercollab/` — agent-native onboarding skill
 - `skills/self-host-supercollab/` — self-hosting skill
 - `deploy/` — generic self-host stack
