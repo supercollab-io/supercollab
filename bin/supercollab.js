@@ -11,7 +11,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 
-const VERSION = '0.7.0-alpha.5';
+const VERSION = '0.7.0-alpha.6';
 const CLI_ENTRY = fileURLToPath(import.meta.url);
 const DEFAULT_SERVER = process.env.SUPERCOLLAB_URL || 'https://supercollab.io';
 const DEFAULT_CONFIG = process.env.SUPERCOLLAB_CONFIG || path.join(os.homedir(), '.supercollab', 'config.json');
