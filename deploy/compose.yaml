@@ -48,7 +48,7 @@ services:
         max-file: "5"
 
   api:
-    image: ${SUPERCOLLAB_IMAGE:-supercollab-api:0.7.0-alpha.6}
+    image: ${SUPERCOLLAB_IMAGE:-supercollab-api:0.7.0-alpha.7}
     user: ${SUPERCOLLAB_API_UID:-10001}:${SUPERCOLLAB_API_GID:-10001}
     build:
       context: ${SUPERCOLLAB_REPO_ROOT:-..}

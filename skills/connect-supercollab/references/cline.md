@@ -13,7 +13,7 @@ the same configuration through its MCP Servers settings.
      "mcpServers": {
        "supercollab": {
          "command": "npx",
-         "args": ["-y", "@supercollab/mcp@0.7.0-alpha.6"],
+         "args": ["-y", "@supercollab/mcp@0.7.0-alpha.7"],
          "disabled": false,
          "autoApprove": []
        }

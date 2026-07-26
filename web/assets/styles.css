@@ -281,9 +281,7 @@ img {
   font-size: 12px;
 }
 
-img[src$="/opencode.svg"],
-img[src$="/cline.svg"],
-img[src$="/cursor.svg"] {
+img[src*="/copilot.svg"] {
   filter: invert(1);
 }
 
@@ -450,6 +448,8 @@ img[src$="/cursor.svg"] {
   border: 1px solid var(--line);
   border-radius: 13px;
   background: #0a0c0f;
+  color: var(--text);
+  text-decoration: none;
   text-align: left;
   cursor: pointer;
   transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;

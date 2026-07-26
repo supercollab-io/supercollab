@@ -1,3 +1,6 @@
+const SITE_RELEASE = '0.7.0-alpha.7';
+const versionedLocalUrl = (path) => `${path}?v=${encodeURIComponent(SITE_RELEASE)}`;
+
 const track = document.querySelector('[data-panel-track]');
 const panels = Array.from(track?.querySelectorAll('.panel') || []);
 const tabs = Array.from(document.querySelectorAll('[data-panel-tab]'));
@@ -72,7 +75,7 @@ function addLogo(parent, agent, className) {
   const wrap = make('span', className);
   if (agent.logo) {
     const image = document.createElement('img');
-    image.src = agent.logo;
+    image.src = versionedLocalUrl(agent.logo);
     image.alt = '';
     image.width = 24;
     image.height = 24;
@@ -147,12 +150,12 @@ function renderAgentDetail(agent) {
 
   const steps = make('div', 'onboarding-steps');
   const first = onboardingStep('01', 'Give this to your agent', 'It identifies the host and changes only that host’s MCP configuration.');
-  const skillUrl = `${window.location.origin}/skill.md`;
+  const skillUrl = `${window.location.origin}${versionedLocalUrl('/skill.md')}`;
   const prompt = `Read ${skillUrl} and connect Super Collab to this workspace using ${agent.name}. Keep sharing off until I choose or join a room.`;
   first.content.append(copyBox(prompt));
   steps.append(first.row);
 
-  const second = onboardingStep('02', 'Use the host’s native setup', 'The shared skill can apply this safely. The exact official command or config shape is available here when you need it.');
+  const second = onboardingStep('02', 'Use the agent-specific setup file', `The shared safety skill uses ${agent.name}’s dedicated host instructions and preserves the same privacy boundary.`);
   for (const setup of agent.setups) {
     const technical = make('details', 'technical-setup');
     technical.append(make('summary', '', setup.label));
@@ -171,8 +174,8 @@ function renderAgentDetail(agent) {
   detail.append(access);
 
   const docs = make('div', 'docs-links');
-  const guide = make('a', 'docs-link', 'SuperCollab host guide');
-  guide.href = agent.skill_reference;
+  const guide = make('a', 'docs-link', `${agent.name} setup file`);
+  guide.href = versionedLocalUrl(agent.skill_reference);
   docs.append(guide);
   for (const source of agent.docs) {
     const link = make('a', 'docs-link', `${source.label} ↗`);
@@ -220,7 +223,7 @@ function renderCatalog(catalog) {
   if (agents[0]) renderAgentDetail(agents[0]);
 }
 
-fetch('/assets/agents.json', { headers: { accept: 'application/json' } })
+fetch(versionedLocalUrl('/assets/agents.json'), { headers: { accept: 'application/json' } })
   .then((response) => {
     if (!response.ok) throw new Error(`agent catalog returned ${response.status}`);
     return response.json();
@@ -229,8 +232,7 @@ fetch('/assets/agents.json', { headers: { accept: 'application/json' } })
   .catch((error) => {
     const grid = document.querySelector('[data-agent-grid]');
     const detail = document.querySelector('[data-agent-detail]');
-    if (grid) grid.textContent = 'The agent catalog could not be loaded.';
-    if (detail) {
-      detail.replaceChildren(make('p', 'load-error', `${error.message}. Use /skill.md for the setup guide.`));
-    }
+    const message = make('p', 'load-error', `${error.message}. The setup-file links remain available.`);
+    if (grid) grid.insertAdjacentElement('afterend', message);
+    if (detail) detail.dataset.catalogError = 'true';
   });

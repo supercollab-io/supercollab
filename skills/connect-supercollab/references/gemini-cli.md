@@ -11,7 +11,7 @@ Gemini CLI supports project-scoped local stdio MCP.
 2. If no conflicting `supercollab` entry exists, add the pinned runtime:
 
    ```bash
-   gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.6
+   gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.7
    ```
 
 3. Start a fresh Gemini CLI session, open `/mcp`, and ask Gemini to check

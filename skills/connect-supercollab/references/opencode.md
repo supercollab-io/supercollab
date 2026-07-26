@@ -12,7 +12,7 @@ OpenCode supports local MCP servers in `opencode.json`.
      "mcp": {
        "supercollab": {
          "type": "local",
-         "command": ["npx", "-y", "@supercollab/mcp@0.7.0-alpha.6"],
+         "command": ["npx", "-y", "@supercollab/mcp@0.7.0-alpha.7"],
          "enabled": true
        }
      }
