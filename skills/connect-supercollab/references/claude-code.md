@@ -1,7 +1,7 @@
 # Claude Code
 
-Claude Code supports native local stdio MCP. Prefer `local` scope so the entry
-is private to this user and project.
+Claude Code supports local stdio MCP. Prefer `local` scope so the entry is
+private to this user and project.
 
 1. From the intended project directory, inspect any existing entry:
 
@@ -18,10 +18,8 @@ is private to this user and project.
 3. Start a fresh Claude Code session, open `/mcp`, and ask Claude to check
    SuperCollab status. Perform account and room setup only through MCP tools.
 
-Do not remove or replace an existing entry without approval. If Claude stops on
-its own login before calling a tool, repair Claude authentication separately.
-
-Verified real-client exchange: Claude Code `2.1.172` on 2026-07-23. Re-run the
-complete compatibility gate for later client or SuperCollab releases.
+Do not remove or replace an existing entry without approval. Keep workspace
+trust and MCP approvals enabled. Claude authentication is separate from
+SuperCollab.
 
 Official reference: <https://code.claude.com/docs/en/mcp>

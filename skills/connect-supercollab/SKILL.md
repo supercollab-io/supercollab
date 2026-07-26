@@ -1,6 +1,6 @@
 ---
 name: connect-supercollab
-description: Safely connect Claude Code, Codex, Gemini CLI, OpenCode, VS Code with Copilot, or Cline to SuperCollab through the client's native local MCP configuration. Use when installing SuperCollab, creating or joining a private agent room, choosing a workspace sharing policy, or verifying encrypted chat and local search.
+description: Safely connect Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot CLI, VS Code, Cline, Cursor, or Factory Droid to SuperCollab through the host's native local stdio MCP configuration. Use when installing SuperCollab, creating or joining a private agent room, choosing a workspace sharing policy, or using encrypted chat and local search.
 ---
 
 # Connect SuperCollab
@@ -10,9 +10,9 @@ stdio MCP encrypts messages and stores decrypted transcripts, room keys, BGE
 embeddings, and search indexes on this machine. The hosted service is an
 encrypted relay and membership control plane.
 
-There is no public SuperCollab management CLI, dashboard, or login flow. The
-client launches the exact npm runtime and every product action happens through
-MCP tools.
+There is no public SuperCollab management CLI, dashboard, or login flow. npm
+delivers the exact local MCP runtime; every product action happens through MCP
+tools inside the user's existing agent.
 
 ## Preserve the privacy boundary
 
@@ -39,36 +39,59 @@ Read [references/security.md](references/security.md) before changing
 authentication, encryption, invitations, local storage, activation, or
 transport.
 
-## Connect the native MCP
+## Use the normalized transport
 
-1. Identify the current client. Ask only if it cannot be inferred.
-2. Read the matching reference before editing configuration:
-   - [references/claude-code.md](references/claude-code.md)
-   - [references/codex.md](references/codex.md)
-   - [references/gemini-cli.md](references/gemini-cli.md)
-   - [references/opencode.md](references/opencode.md)
-   - [references/vscode-copilot.md](references/vscode-copilot.md)
-   - [references/cline.md](references/cline.md)
+All supported hosts use the same boundary: the host launches the pinned npm
+package as a local MCP subprocess over stdio, and that process connects to the
+relay over HTTPS. Do not point a host directly at the relay as remote HTTP MCP;
+that would move plaintext tool arguments outside the local encryption boundary.
+
+Keep the shared lifecycle here and use the matching thin reference only for the
+host's native configuration syntax:
+
+- [Claude Code](references/claude-code.md)
+- [Codex](references/codex.md)
+- [Gemini CLI](references/gemini-cli.md)
+- [OpenCode](references/opencode.md)
+- [GitHub Copilot CLI or VS Code](references/github-copilot.md)
+- [Cline](references/cline.md)
+- [Cursor](references/cursor.md)
+- [Factory Droid](references/factory-droid.md)
+
+If the current host is not listed, consult only its official documentation.
+Use a documented local stdio MCP configuration when available. If it supports
+only another transport or an extension API, explain the gap and stop; do not
+install a similarly named package, an unofficial bridge, or the retired
+SuperCollab CLI.
+
+## Connect the MCP
+
+1. Identify the current host. Ask only if it cannot be inferred.
+2. Read its matching reference before editing configuration.
 3. Require Node.js 20 or newer. Use only
    `@supercollab/mcp@0.7.0-alpha.5`; never use an unversioned package,
    `@latest`, a similarly named package, or a global SuperCollab install.
 4. Inspect any existing MCP entry named `supercollab`. Preserve unrelated
    configuration and do not replace a different entry without showing the
    difference and receiving approval.
-5. Apply the client's native local stdio setup from its reference. `npx -y`
-   downloads the pinned runtime into npm's cache and starts it; it does not
-   create a public SuperCollab command.
-6. Restart the client or open a fresh session because tool discovery does not
-   update an existing session.
-7. Call `supercollab_status`. If setup is required, ask for only:
+5. Apply the host's documented local stdio setup. Prefer project-local scope
+   unless the user explicitly asks to make SuperCollab available everywhere.
+6. Explain that `npx -y` downloads the pinned runtime into npm's cache and
+   starts it. It does not create a public SuperCollab command interface.
+7. Restart the host or open a fresh session so it discovers the new tools.
+8. Call `supercollab_status`. If setup is required, ask for only:
    - a lowercase username (`a-z`, `0-9`, `_`, 3-64 characters); and
    - an optional human-readable label for this local agent.
-8. Call `supercollab_setup`. The MCP generates the account key and Ed25519
+9. Call `supercollab_setup`. The MCP generates the account key and Ed25519
    private key locally, saves them to a mode-`600` config on POSIX systems, and
    returns neither secret. Never ask the user to create, paste, or reveal an
    account key.
-9. Call `supercollab_status` again and report the username, agent fingerprint,
-   workspace state, and privacy object. Never expose the raw config.
+10. Call `supercollab_status` again and report the username, agent fingerprint,
+    workspace state, and privacy object. Never expose the raw config.
+
+The host's own login, subscription, provider key, workspace trust, and tool
+approval remain the host's responsibility. Do not repair or conflate them with
+SuperCollab authentication.
 
 ## Start collaborating
 
@@ -84,35 +107,27 @@ transport.
    mode, set `confirmed_by_user: true` only for that approved text.
 6. Call `chat_read`, then `chat_search`; confirm `local_only: true` in the search
    result. The first semantic search may download and warm the local BGE model.
-7. If the user asks to stop sharing, call `workspace_deactivate` and verify that
-   status is off.
+7. If the user asks to stop sharing, call `workspace_deactivate` and confirm
+   that status is off.
 
-## Protect local and client configuration
+## Protect local and host configuration
 
 - Never print or commit `accountKey`, `agentPrivateKeyPem`, session tokens, room
   keys, private invites, pending rotation state, or raw config files.
-- MCP client configuration contains only the pinned local command and optional
-  non-secret environment such as the intended working directory.
+- Host MCP configuration contains only the pinned local command and optional
+  non-secret environment such as `SUPERCOLLAB_PROFILE`.
 - Keep the config directory mode `700` and config file mode `600` on POSIX.
+- Do not weaken host trust, sandbox, or approval controls to make setup easier.
 - Use one independently revocable local agent identity per client/device when
   the product exposes multi-agent management.
-- Do not repair or conflate the host client's own account login with
-  SuperCollab. The host must start and invoke the MCP before SuperCollab can act.
 
 When the user requests security maintenance, use `account_rotate_key`,
 `agent_list`/`agent_rotate`/`agent_revoke`, and
 `session_list`/`session_revoke`. Rotation and revocation require a specific
-current user request and `confirmed_by_user: true`; never infer that approval.
+current user request and `confirmed_by_user: true`; never infer approval.
 
 If multiple supported hosts on one machine need independent revocation, create
 a named identity with `agent_profile_create`, then add the non-secret
 `SUPERCOLLAB_PROFILE` value to that host's MCP environment. Inspect with
 `agent_profile_list`; revoke only after explicit confirmation. Never copy the
 account key into a second host configuration.
-
-## Compatibility lab
-
-Cursor, Pi, and Factory are tracked but are not in the verified free-client
-core. Do not generate setup steps for them from memory. Read
-[references/compatibility-lab.md](references/compatibility-lab.md) and keep the
-public status conservative until the full real-client security gate passes.

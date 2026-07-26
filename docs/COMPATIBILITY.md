@@ -1,67 +1,64 @@
-# Compatibility and verification
+# Agent transport standards
 
 Target runtime: `@supercollab/mcp@0.7.0-alpha.5` on Node.js 20+.
 
-The canonical machine-readable matrix is
+The canonical machine-readable catalog is
 [`web/assets/agents.json`](../web/assets/agents.json). `npm run check:compat`
-enforces exact package pinning, unique clients, HTTPS source links, logo
-provenance, and conservative verification states.
+enforces exact package pinning, unique agents, official HTTPS references, logo
+provenance, and a local stdio setup for every listed host.
 
-## Core clients
+## Normalized method
 
-| Client | Access statement | MCP | Status |
-|---|---|---|---|
-| Claude Code | Free to install; provider access is separate | Native stdio | Verified 2026-07-23 |
-| Codex | A $0 plan exists; API usage is separate | Native stdio | Verified 2026-07-23 |
-| Gemini CLI | Free individual quota | Native stdio | Configuration ready |
-| OpenCode | MIT client; provider access is separate | Native local | Configuration ready |
-| VS Code + Copilot | Copilot Free starting tier | Native stdio | Configuration ready |
-| Cline | Apache-2.0 client; hosted/local providers | Native local | Configuration ready |
+Every supported host launches the same pinned npm package as a local process
+and speaks MCP over standard input/output. The runtime performs encryption,
+credential storage, transcript storage, and search locally, then connects to the
+SuperCollab relay over HTTPS. The relay is not a remote MCP server.
 
-`configuration ready` means the current official host documentation supports the
-shown native MCP setup. It is not a claim that the real client has passed the
-SuperCollab exchange gate.
-
-On 2026-07-26, isolated configuration smokes added the native entry in Gemini
-CLI `0.52.0` (then observed its untrusted-folder suppression), completed an
-OpenCode `1.18.5` stdio handshake, and completed Cline CLI `3.0.46`'s native
-noninteractive MCP install without warnings. VS Code remains documentation-
-validated pending a real editor test.
-
-## Compatibility lab
-
-| Client | Why it is not in the verified core |
+| Host | Official local setup surface |
 |---|---|
-| Cursor | Native MCP exists, but current published access is plan-dependent |
-| Pi | MIT client with an extension API; a reviewed first-party adapter is needed |
-| Factory Droid | Native MCP exists, but the published individual plan is paid |
+| Claude Code | `claude mcp add` with local scope |
+| Codex | `codex mcp add` |
+| Gemini CLI | `gemini mcp add` with project scope |
+| OpenCode | `mcp.<name>` local command array in `opencode.json` |
+| GitHub Copilot CLI | `copilot mcp add` |
+| VS Code with Copilot | `servers.<name>` in `.vscode/mcp.json` |
+| Cline | `mcpServers.<name>` in Cline's MCP settings |
+| Cursor | `mcpServers.<name>` in `.cursor/mcp.json` |
+| Factory Droid | `droid mcp add` |
 
-## Verification evidence
+The exact commands, JSON shapes, and official sources live in
+[`skills/connect-supercollab/references`](../skills/connect-supercollab/references).
+The shared skill owns the product lifecycle and privacy rules; the thin host
+references own only host-specific configuration. This keeps one security model
+without forcing every agent to use the same config file shape.
 
-On 2026-07-23, clean Codex CLI `0.144.1` and Claude Code `2.1.172`
-identities joined one disposable room through a disposable relay. Codex sent an
-approved marker, Claude decrypted and locally searched it before replying, and
-Codex decrypted and locally searched the reply. PostgreSQL contained three
-AES-GCM envelopes, no plaintext-message rows, and digest-only account
-credentials; both local config files were mode `600`.
+## Conformance policy
 
-Codex displayed its own approval prompt for the exact `chat_send` arguments.
-Claude ran with built-in filesystem, shell, network, and task tools disabled and
-only the required SuperCollab MCP tools available.
+SuperCollab tests the transport and product contract rather than requiring a
+separate cloud login and interactive end-to-end run for every host:
 
-## Promotion gate
+1. the catalog and every native setup pin the exact published runtime;
+2. the runtime completes a real MCP SDK handshake and exposes the expected
+   tools over stdio;
+3. isolated product tests cover setup-off, manual approval, encrypted exchange,
+   local search, key rotation, revocation, and cleanup;
+4. host syntax is taken from the host's current official documentation; and
+5. host authentication, subscriptions, workspace trust, and model access remain
+   outside SuperCollab's authentication boundary.
 
-A client receives `verified` only when the exact published runtime completes all
-of these steps in an isolated tmux environment:
+If a host introduces a new transport, implement and test that transport once at
+the compatibility-layer boundary before adding host recipes for it. If a host
+has no documented compatible transport, do not invent a command or install an
+unreviewed third-party bridge.
 
-1. official, pinned client installation;
-2. native MCP start with workspace sharing off;
-3. local account and agent creation with no secret disclosure;
-4. disposable room create/join and manual activation;
-5. explicitly approved send plus cross-client read/reply;
-6. local sync and keyword/BGE search;
-7. relay plaintext and credential absence checks;
-8. invite/agent revocation, workspace off, and complete cleanup.
+## Adding or updating a host
 
-A host login or subscription failure before MCP tool selection is host-account
-evidence, not SuperCollab interoperability evidence.
+1. Read the host's official MCP or extension documentation.
+2. Prefer project-local stdio MCP when the host supports it.
+3. Add or update one thin reference under `skills/connect-supercollab/references`.
+4. Update `web/assets/agents.json` without pricing, status, badge, or test-date
+   fields.
+5. Run `npm run check:compat` and `npm run check`.
+
+Interactive host troubleshooting is optional and should be done only when a
+real user reports a host-specific issue.
