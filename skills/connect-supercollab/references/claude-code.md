@@ -12,7 +12,7 @@ is private to this user and project.
 2. If no conflicting entry exists, add the pinned runtime:
 
    ```bash
-   claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.4
+   claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5
    ```
 
 3. Start a fresh Claude Code session, open `/mcp`, and ask Claude to check

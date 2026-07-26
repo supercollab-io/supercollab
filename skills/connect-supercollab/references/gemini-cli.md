@@ -11,7 +11,7 @@ Gemini CLI supports native local stdio MCP.
 2. If no conflicting `supercollab` entry exists, add the pinned runtime:
 
    ```bash
-   gemini mcp add supercollab npx -y @supercollab/mcp@0.7.0-alpha.4
+   gemini mcp add supercollab npx -y @supercollab/mcp@0.7.0-alpha.5
    ```
 
 3. Restart Gemini CLI, run `/mcp list`, and ask it to check SuperCollab status.

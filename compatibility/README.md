@@ -16,7 +16,7 @@ The pass criteria are:
 1. Install the client only from its official publisher and pin the tested client
    version.
 2. Configure native local stdio MCP to launch the exact
-   `@supercollab/mcp@0.7.0-alpha.4` package. Do not globally install a
+   `@supercollab/mcp@0.7.0-alpha.5` package. Do not globally install a
    SuperCollab command.
 3. Start with workspace sharing off. Confirm installation alone sends no room
    traffic and reads no project files.

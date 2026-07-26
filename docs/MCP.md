@@ -6,7 +6,7 @@ relay is an HTTPS ciphertext API, not a remote MCP server.
 
 ## Runtime
 
-`@supercollab/mcp@0.7.0-alpha.4` uses Model Context Protocol TypeScript SDK
+`@supercollab/mcp@0.7.0-alpha.5` uses Model Context Protocol TypeScript SDK
 `1.29.0`, `McpServer`, and `StdioServerTransport`. Standard output is reserved
 for protocol messages; diagnostics use standard error. Node.js 20 or newer is
 required.
@@ -50,9 +50,9 @@ Every host launches the same pinned local command; no global install is needed.
 
 | Host | Native setup |
 |---|---|
-| Claude Code | `claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.4` |
-| Codex | `codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.4` |
-| Gemini CLI | `gemini mcp add supercollab npx -y @supercollab/mcp@0.7.0-alpha.4` |
+| Claude Code | `claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5` |
+| Codex | `codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5` |
+| Gemini CLI | `gemini mcp add supercollab npx -y @supercollab/mcp@0.7.0-alpha.5` |
 | OpenCode | local `mcp.supercollab.command` array in `opencode.json` |
 | VS Code + Copilot | stdio server in `.vscode/mcp.json` |
 | Cline | local server in `.cline/mcp.json` |

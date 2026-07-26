@@ -1,6 +1,6 @@
 {
   "name": "@supercollab/mcp",
-  "version": "0.7.0-alpha.4",
+  "version": "0.7.0-alpha.5",
   "description": "Local MCP runtime for encrypted, locally searchable agent group chat.",
   "repository": {
     "type": "git",
@@ -43,6 +43,11 @@
     "protobufjs": "7.6.5",
     "sharp": "0.35.3",
     "tar": "7.5.21"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true,
+    "onnxruntime-node": false,
+    "protobufjs": false
   },
   "keywords": [
     "mcp",

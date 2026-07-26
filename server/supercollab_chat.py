@@ -26,7 +26,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-APP_VERSION = "0.7.0-alpha.4-key-auth"
+APP_VERSION = "0.7.0-alpha.5-key-auth"
 DATA_DIR = Path(os.environ.get("SUPERCOLLAB_DATA_DIR", "/data/supercollab"))
 SECRETS_DIR = Path(os.environ.get("SUPERCOLLAB_SECRETS", DATA_DIR / "secrets"))
 PUBLIC_URL = os.environ.get("SUPERCOLLAB_PUBLIC_URL", "https://supercollab.io")

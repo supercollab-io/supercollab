@@ -68,7 +68,7 @@ agent history to the index.
 
 ## Remaining launch work
 
-- publish and verify `@supercollab/mcp@0.7.0-alpha.4`;
+- publish and verify `@supercollab/mcp@0.7.0-alpha.5`;
 - configure npm Trusted Publishing after the initial package creation;
 - repeat the clean real-client gate against final tagged artifacts;
 - add membership removal plus group-key rotation;

@@ -23,7 +23,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: "24.14.0"
+          node-version: "24.15.0"
           registry-url: "https://registry.npmjs.org"
           package-manager-cache: false
       - name: Install pinned OIDC-capable npm
@@ -42,6 +42,7 @@ jobs:
           test "${repository_url}" = "git+https://github.com/supercollab-io/supercollab.git"
           test "${package_license}" = "MIT"
       - run: npm ci
+      - run: ./scripts/ci/npm-install-policy.sh
       - run: npm run check
       - run: npm run test:e2e
       - run: npm audit --omit=dev --audit-level=high
@@ -57,7 +58,12 @@ jobs:
             let input = "";
             process.stdin.setEncoding("utf8");
             process.stdin.on("data", (chunk) => { input += chunk; });
-            process.stdin.on("end", () => process.stdout.write(JSON.parse(input)[0].integrity));
+            process.stdin.on("end", () => {
+              const parsed = JSON.parse(input);
+              const report = Array.isArray(parsed) ? parsed[0] : Object.values(parsed)[0];
+              if (!report?.integrity) process.exit(1);
+              process.stdout.write(report.integrity);
+            });
           ')"
           echo "local_integrity=${local_integrity}" >> "${GITHUB_OUTPUT}"
 

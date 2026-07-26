@@ -7,7 +7,7 @@ Cline CLI supports native local stdio MCP and a noninteractive installer.
 2. If no conflicting `supercollab` entry exists, run:
 
    ```bash
-   cline mcp add --transport stdio --yes supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.4
+   cline mcp add --transport stdio --yes supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.5
    ```
 
 3. Start a fresh Cline session and ask it to check SuperCollab status. Perform
