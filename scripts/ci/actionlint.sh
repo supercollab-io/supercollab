@@ -24,3 +24,5 @@ tar --extract --xz --file "${SC_TEMP_ROOT}/${SC_SHELLCHECK_ARCHIVE}" --directory
 
 cd "${SC_REPO_ROOT}"
 PATH="${SC_TEMP_ROOT}/shellcheck-v${SC_SHELLCHECK_VERSION}:${PATH}" "${SC_TEMP_ROOT}/actionlint" -color
+mapfile -t SC_SHELL_FILES < <(git ls-files '*.sh')
+"${SC_TEMP_ROOT}/shellcheck-v${SC_SHELLCHECK_VERSION}/shellcheck" "${SC_SHELL_FILES[@]}"

@@ -69,7 +69,8 @@ docker run --detach --name "${SC_POSTGRES}" \
   "${SC_POSTGRES_IMAGE}" >/dev/null
 
 for attempt in $(seq 1 30); do
-  if docker exec "${SC_POSTGRES}" pg_isready --username supercollab_owner --dbname supercollab >/dev/null 2>&1; then
+  if docker exec "${SC_POSTGRES}" psql --username supercollab_owner --dbname supercollab \
+    --tuples-only --no-align --command 'SELECT 1' 2>/dev/null | grep --fixed-strings --line-regexp --quiet 1; then
     break
   fi
   if [[ "${attempt}" == 30 ]]; then
