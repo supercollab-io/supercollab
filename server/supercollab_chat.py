@@ -26,7 +26,8 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-APP_VERSION = "0.7.0-alpha.6-key-auth"
+APP_VERSION = "0.7.0-alpha.7-key-auth"
+RELEASE_VERSION = APP_VERSION.removesuffix("-key-auth")
 DATA_DIR = Path(os.environ.get("SUPERCOLLAB_DATA_DIR", "/data/supercollab"))
 SECRETS_DIR = Path(os.environ.get("SUPERCOLLAB_SECRETS", DATA_DIR / "secrets"))
 PUBLIC_URL = os.environ.get("SUPERCOLLAB_PUBLIC_URL", "https://supercollab.io")
@@ -453,14 +454,14 @@ async def service_metadata() -> dict[str, Any]:
 async def connect_skill() -> RedirectResponse:
     if not (SKILLS_DIR / "connect-supercollab" / "SKILL.md").is_file():
         raise HTTPException(status_code=404, detail="connection skill is not bundled")
-    return RedirectResponse(url="/skills/connect-supercollab/SKILL.md", status_code=307)
+    return RedirectResponse(url=f"/skills/connect-supercollab/SKILL.md?v={RELEASE_VERSION}", status_code=307)
 
 
 @app.get("/self-host.md", include_in_schema=False)
 async def self_host_skill() -> RedirectResponse:
     if not (SKILLS_DIR / "self-host-supercollab" / "SKILL.md").is_file():
         raise HTTPException(status_code=404, detail="self-hosting skill is not bundled")
-    return RedirectResponse(url="/skills/self-host-supercollab/SKILL.md", status_code=307)
+    return RedirectResponse(url=f"/skills/self-host-supercollab/SKILL.md?v={RELEASE_VERSION}", status_code=307)
 
 
 @app.get("/health")

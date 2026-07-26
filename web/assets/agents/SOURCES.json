@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "retrieved": "2026-07-26",
+  "assets": [
+    {
+      "file": "claude-code.png",
+      "product": "Claude Code",
+      "source": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon-dark/android-chrome-192x192.png",
+      "upstream": "Claude Code official documentation favicon",
+      "sha256": "d4e5e8e9990ac52f147a74ae80b9e69cdc612264b84a76cdb5c43b53b73a1707"
+    },
+    {
+      "file": "codex.png",
+      "product": "Codex",
+      "source": "https://openai.gallerycdn.vsassets.io/extensions/openai/chatgpt/26.5721.30844/1784862637399/Microsoft.VisualStudio.Services.Icons.Default",
+      "upstream": "Official OpenAI Codex VS Code Marketplace extension 26.5721.30844",
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3"
+    },
+    {
+      "file": "gemini-cli.png",
+      "product": "Gemini CLI",
+      "source": "https://raw.githubusercontent.com/google-gemini/gemini-cli/776d6b6ea0f1216ee441a56f91792c599b75408e/packages/vscode-ide-companion/assets/icon.png",
+      "upstream": "google-gemini/gemini-cli, Apache-2.0",
+      "sha256": "351e9f5b1bf863d738cd7be4ed040a625a1419450ae7fc490143e4042b7c2438"
+    },
+    {
+      "file": "opencode.svg",
+      "product": "OpenCode",
+      "source": "https://raw.githubusercontent.com/anomalyco/opencode/e3471526f4c71b2c4ee00117e125e179da01e6e2/packages/console/app/src/asset/brand/opencode-logo-dark-square.svg",
+      "upstream": "anomalyco/opencode, MIT",
+      "sha256": "d6a0e3b8a295f413543f41cb73957e670351b5cb088c8d9dbd186b9e9d633cca"
+    },
+    {
+      "file": "copilot.svg",
+      "product": "GitHub Copilot",
+      "source": "https://raw.githubusercontent.com/primer/octicons/ab786838f7ec93523b82c2905e37b9e0c8639e43/icons/copilot-96.svg",
+      "upstream": "GitHub Primer Octicons, MIT",
+      "sha256": "6852fd6b1ae96bb93da21a9593ab352e22f9f61114f717aba981648695ce0cd5"
+    },
+    {
+      "file": "cline.png",
+      "product": "Cline",
+      "source": "https://cline.bot/assets/branding/brand/cline-brand-assets.zip#cline-brand-assets/App%20Icons/PNG/APP_ICON_DARK.png",
+      "upstream": "Official Cline downloadable brand kit",
+      "sha256": "09e7fbc248a6e009701a00176abd390dcc30dcf51cef31d2ae45be201c1ca12d"
+    },
+    {
+      "file": "cursor.png",
+      "product": "Cursor",
+      "source": "https://ptht05hbb1ssoooe.public.blob.vercel-storage.com/assets/brand/cursor-brand-assets.zip#App%20Icons/PNG/APP_ICON_25D_DARK.png",
+      "upstream": "Official Cursor downloadable brand kit",
+      "sha256": "3a298aaaa2d973c49a6bcf2ccfe085b5da5ca9e5fe350b09bf29ff3cdad263f6"
+    },
+    {
+      "file": "factory-droid.svg",
+      "product": "Factory Droid",
+      "source": "https://factory.ai/favicon.svg",
+      "upstream": "Factory official website favicon",
+      "sha256": "661300e6825cf9d2a98f855343b96f9acd91ab196604167c9e6cf343564457c9"
+    }
+  ]
+}

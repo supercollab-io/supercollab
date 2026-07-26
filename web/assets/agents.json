@@ -2,7 +2,7 @@
   "schema_version": 2,
   "runtime": {
     "package": "@supercollab/mcp",
-    "version": "0.7.0-alpha.6",
+    "version": "0.7.0-alpha.7",
     "node": ">=20",
     "protocol": "mcp",
     "transport": "stdio",
@@ -13,7 +13,7 @@
       "id": "claude-code",
       "name": "Claude Code",
       "short_name": "Claude",
-      "logo": "/assets/agents/claude-code.svg",
+      "logo": "/assets/agents/claude-code.png",
       "transport": "stdio",
       "integration_label": "Native stdio MCP",
       "access": "Claude authentication and model access are managed separately from SuperCollab.",
@@ -23,7 +23,7 @@
           "label": "Claude Code command",
           "format": "command",
           "target": "Run from the intended project folder",
-          "value": "claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.6"
+          "value": "claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.7"
         }
       ],
       "next_step": "Start a fresh Claude Code session, open /mcp, and ask Claude to check SuperCollab status.",
@@ -39,7 +39,7 @@
       "id": "codex",
       "name": "Codex",
       "short_name": "Codex",
-      "logo": "/assets/agents/codex.svg",
+      "logo": "/assets/agents/codex.png",
       "transport": "stdio",
       "integration_label": "Native stdio MCP",
       "access": "Codex authentication and model access are managed separately from SuperCollab.",
@@ -49,7 +49,7 @@
           "label": "Codex command",
           "format": "command",
           "target": "Run once in a terminal",
-          "value": "codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.6"
+          "value": "codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.7"
         }
       ],
       "next_step": "Start a fresh Codex session, open /mcp, and ask Codex to check SuperCollab status.",
@@ -65,7 +65,7 @@
       "id": "gemini-cli",
       "name": "Gemini CLI",
       "short_name": "Gemini",
-      "logo": "/assets/agents/gemini-cli.svg",
+      "logo": "/assets/agents/gemini-cli.png",
       "transport": "stdio",
       "integration_label": "Native stdio MCP",
       "access": "Gemini authentication and model access are managed separately from SuperCollab.",
@@ -75,7 +75,7 @@
           "label": "Gemini CLI command",
           "format": "command",
           "target": "Run from the intended project folder",
-          "value": "gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.6"
+          "value": "gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.7"
         }
       ],
       "next_step": "Start a fresh Gemini CLI session, open /mcp, and ask Gemini to check SuperCollab status.",
@@ -101,7 +101,7 @@
           "label": "OpenCode project config",
           "format": "json",
           "target": "Merge into opencode.json",
-          "value": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"mcp\": {\n    \"supercollab\": {\n      \"type\": \"local\",\n      \"command\": [\"npx\", \"-y\", \"@supercollab/mcp@0.7.0-alpha.6\"],\n      \"enabled\": true\n    }\n  }\n}"
+          "value": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"mcp\": {\n    \"supercollab\": {\n      \"type\": \"local\",\n      \"command\": [\"npx\", \"-y\", \"@supercollab/mcp@0.7.0-alpha.7\"],\n      \"enabled\": true\n    }\n  }\n}"
         }
       ],
       "next_step": "Restart OpenCode, run opencode mcp list, and ask it to check SuperCollab status.",
@@ -127,13 +127,13 @@
           "label": "Copilot CLI command",
           "format": "command",
           "target": "Run once in a terminal",
-          "value": "copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.6"
+          "value": "copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.7"
         },
         {
           "label": "VS Code workspace config",
           "format": "json",
           "target": "Merge into .vscode/mcp.json",
-          "value": "{\n  \"servers\": {\n    \"supercollab\": {\n      \"type\": \"stdio\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.6\"]\n    }\n  }\n}"
+          "value": "{\n  \"servers\": {\n    \"supercollab\": {\n      \"type\": \"stdio\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.7\"]\n    }\n  }\n}"
         }
       ],
       "next_step": "Start a fresh Copilot CLI or VS Code agent session, list MCP servers, and ask Copilot to check SuperCollab status.",
@@ -153,7 +153,7 @@
       "id": "cline",
       "name": "Cline",
       "short_name": "Cline",
-      "logo": "/assets/agents/cline.svg",
+      "logo": "/assets/agents/cline.png",
       "transport": "stdio",
       "integration_label": "Native stdio MCP",
       "access": "Cline model or provider access is managed separately from SuperCollab.",
@@ -163,7 +163,7 @@
           "label": "Cline MCP config",
           "format": "json",
           "target": "Merge into Cline's MCP settings",
-          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.6\"],\n      \"disabled\": false,\n      \"autoApprove\": []\n    }\n  }\n}"
+          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.7\"],\n      \"disabled\": false,\n      \"autoApprove\": []\n    }\n  }\n}"
         }
       ],
       "next_step": "Start a fresh Cline session and ask it to check SuperCollab status; keep write-tool approval manual.",
@@ -179,7 +179,7 @@
       "id": "cursor",
       "name": "Cursor",
       "short_name": "Cursor",
-      "logo": "/assets/agents/cursor.svg",
+      "logo": "/assets/agents/cursor.png",
       "transport": "stdio",
       "integration_label": "Native stdio MCP",
       "access": "Cursor authentication and model access are managed separately from SuperCollab.",
@@ -189,7 +189,7 @@
           "label": "Cursor project config",
           "format": "json",
           "target": "Merge into .cursor/mcp.json",
-          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.6\"]\n    }\n  }\n}"
+          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.7\"]\n    }\n  }\n}"
         }
       ],
       "next_step": "Start a fresh Cursor agent session, list MCP servers, and ask Cursor to check SuperCollab status.",
@@ -205,7 +205,7 @@
       "id": "factory-droid",
       "name": "Factory Droid",
       "short_name": "Factory",
-      "logo": null,
+      "logo": "/assets/agents/factory-droid.svg",
       "transport": "stdio",
       "integration_label": "Native stdio MCP",
       "access": "Factory authentication and model access are managed separately from SuperCollab.",
@@ -215,7 +215,7 @@
           "label": "Factory Droid command",
           "format": "command",
           "target": "Run once in a terminal",
-          "value": "droid mcp add supercollab \"npx -y @supercollab/mcp@0.7.0-alpha.6\""
+          "value": "droid mcp add supercollab \"npx -y @supercollab/mcp@0.7.0-alpha.7\""
         }
       ],
       "next_step": "Start a fresh Droid session, open /mcp, and ask Droid to check SuperCollab status.",

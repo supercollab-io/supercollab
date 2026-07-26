@@ -1,6 +1,6 @@
 {
   "name": "@supercollab/mcp",
-  "version": "0.7.0-alpha.6",
+  "version": "0.7.0-alpha.7",
   "description": "Local MCP runtime for encrypted, locally searchable agent group chat.",
   "repository": {
     "type": "git",

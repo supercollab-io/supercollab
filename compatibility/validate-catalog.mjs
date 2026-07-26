@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = (name) => JSON.parse(fs.readFileSync(path.join(root, name), 'utf8'));
 const catalog = readJson('web/assets/agents.json');
+const logoSources = readJson('web/assets/agents/SOURCES.json');
 const pkg = readJson('package.json');
 const errors = [];
 const ids = new Set();
@@ -42,9 +44,15 @@ expect(catalog.runtime?.protocol === 'mcp', 'public runtime protocol must be MCP
 expect(catalog.runtime?.transport === 'stdio', 'public runtime transport must be stdio');
 expect(pkg.homepage === 'https://supercollab.io', 'package homepage must use the canonical domain');
 expect(Array.isArray(catalog.agents), 'catalog agents must be an array');
+expect(logoSources.schema_version === 1, 'logo source manifest schema_version must be 1');
+expect(Array.isArray(logoSources.assets), 'logo source manifest assets must be an array');
+
+const logoSourceByFile = new Map((logoSources.assets || []).map((asset) => [asset.file, asset]));
 
 const runtimeSpec = `${pkg.name}@${pkg.version}`;
 const runtimeSource = fs.readFileSync(path.join(root, 'bin/supercollab.js'), 'utf8');
+const siteHtml = fs.readFileSync(path.join(root, 'web/index.html'), 'utf8');
+const siteScript = fs.readFileSync(path.join(root, 'web/assets/app.js'), 'utf8');
 expect(
   runtimeSource.includes(`const VERSION = '${pkg.version}';`),
   'runtime source version must match package.json',
@@ -52,6 +60,16 @@ expect(
 expect(
   runtimeSource.includes(`'${pkg.homepage}'`),
   'runtime default relay must use the canonical domain',
+);
+expect(
+  siteHtml.includes(`/assets/styles.css?v=${pkg.version}`)
+    && siteHtml.includes(`/assets/app.js?v=${pkg.version}`),
+  'frontend entry assets must be cache-busted with package.json version',
+);
+expect(
+  siteScript.includes(`const SITE_RELEASE = '${pkg.version}';`)
+    && siteScript.includes("versionedLocalUrl('/assets/agents.json')"),
+  'frontend catalog fetch must be cache-busted with package.json version',
 );
 
 for (const [index, agent] of (catalog.agents || []).entries()) {
@@ -72,10 +90,16 @@ for (const [index, agent] of (catalog.agents || []).entries()) {
     expect(!(key in (agent || {})), `${label}: public catalog must not contain ${key}`);
   }
 
-  if (agent.logo !== null) {
-    expect(/^\/assets\/agents\/[a-z0-9-]+\.svg$/.test(agent.logo || ''), `${label}: unsafe logo path`);
-    const logoFile = path.join(root, 'web', String(agent.logo || '').replace(/^\//, ''));
-    expect(fs.existsSync(logoFile), `${label}: logo file does not exist`);
+  expect(/^\/assets\/agents\/[a-z0-9-]+\.(?:png|svg)$/.test(agent.logo || ''), `${label}: missing or unsafe logo path`);
+  const logoFile = path.join(root, 'web', String(agent.logo || '').replace(/^\//, ''));
+  expect(fs.existsSync(logoFile), `${label}: logo file does not exist`);
+  const logoName = path.basename(logoFile);
+  const logoSource = logoSourceByFile.get(logoName);
+  expect(Boolean(logoSource), `${label}: logo source manifest entry is missing`);
+  expect(/^https:\/\//.test(logoSource?.source || ''), `${label}: logo source must use HTTPS`);
+  if (fs.existsSync(logoFile) && logoSource?.sha256) {
+    const logoHash = crypto.createHash('sha256').update(fs.readFileSync(logoFile)).digest('hex');
+    expect(logoHash === logoSource.sha256, `${label}: logo does not match its recorded upstream asset`);
   }
 
   expect(Array.isArray(agent.setups) && agent.setups.length > 0, `${label}: at least one native setup is required`);
@@ -107,6 +131,7 @@ for (const [index, agent] of (catalog.agents || []).entries()) {
 
 expect(ids.size === expectedIds.size, `catalog must contain exactly ${expectedIds.size} supported agents`);
 for (const id of expectedIds) expect(ids.has(id), `catalog is missing ${id}`);
+expect(logoSourceByFile.size === expectedIds.size, `logo source manifest must contain exactly ${expectedIds.size} assets`);
 expect(fs.existsSync(path.join(root, 'web/assets/agents/ATTRIBUTION.md')), 'logo attribution is missing');
 expect(!fs.existsSync(path.join(root, 'skills/connect-supercollab/references/compatibility-lab.md')), 'compatibility lab reference must not remain');
 

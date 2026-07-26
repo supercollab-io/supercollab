@@ -68,10 +68,16 @@ class AgentManagementTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(pathlib.Path(root.path).is_file())
         response = await api.connect_skill()
         self.assertEqual(response.status_code, 307)
-        self.assertEqual(response.headers["location"], "/skills/connect-supercollab/SKILL.md")
+        self.assertEqual(
+            response.headers["location"],
+            f"/skills/connect-supercollab/SKILL.md?v={api.RELEASE_VERSION}",
+        )
         self_host = await api.self_host_skill()
         self.assertEqual(self_host.status_code, 307)
-        self.assertEqual(self_host.headers["location"], "/skills/self-host-supercollab/SKILL.md")
+        self.assertEqual(
+            self_host.headers["location"],
+            f"/skills/self-host-supercollab/SKILL.md?v={api.RELEASE_VERSION}",
+        )
 
         metadata = await api.service_metadata()
         self.assertEqual(metadata["connect_skill"], "/skill.md")
