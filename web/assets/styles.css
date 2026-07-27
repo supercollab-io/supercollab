@@ -578,8 +578,26 @@ img[src*="/copilot.svg"] {
   font-size: 13px;
 }
 
+.journey-label {
+  margin: 25px 0 0;
+  color: #8eacdf;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.friend-label {
+  margin-top: 30px;
+}
+
 .onboarding-steps {
-  margin-top: 22px;
+  margin-top: 8px;
+}
+
+.friend-steps {
+  margin-top: 8px;
 }
 
 .onboarding-step {
@@ -654,11 +672,23 @@ img[src*="/copilot.svg"] {
   border-top: 1px solid var(--line);
 }
 
-.technical-setup summary {
-  padding-top: 13px;
+.manual-setup {
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.manual-setup > summary {
+  padding-top: 15px;
   color: #707883;
   cursor: pointer;
   font-size: 10px;
+}
+
+.setup-label {
+  margin: 12px 0 0;
+  color: #969da7;
+  font-size: 10px;
+  font-weight: 620;
 }
 
 .setup-target {
@@ -769,6 +799,24 @@ img[src*="/copilot.svg"] {
   color: #7d848e;
   font-size: 11px;
   line-height: 1.65;
+}
+
+.x-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #aeb4bd;
+  white-space: nowrap;
+}
+
+.x-link:hover {
+  color: white;
+}
+
+.x-link img {
+  width: 10px;
+  height: 10px;
+  object-fit: contain;
 }
 
 .panel-controls {

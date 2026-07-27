@@ -71,6 +71,19 @@ expect(
     && siteScript.includes("versionedLocalUrl('/assets/agents.json')"),
   'frontend catalog fetch must be cache-busted with package.json version',
 );
+expect(
+  siteHtml.includes('How do I start a chat with a friend?')
+    && siteHtml.includes('What is the difference between SuperCollab-hosted and self-hosted?')
+    && siteHtml.includes('There is no username search, public room directory, or cross-relay federation.'),
+  'frontend FAQ must explain the private invite flow and isolated relay boundary',
+);
+expect(
+  siteScript.includes('PASTE_PRIVATE_INVITE_HERE')
+    && siteScript.includes('give me a one-person private invite that expires in 24 hours'),
+  'frontend onboarding must provide creator and collaborator room prompts',
+);
+expect(fs.existsSync(path.join(root, 'web/assets/x.svg')), 'creator X mark is missing');
+expect(fs.existsSync(path.join(root, 'web/assets/ATTRIBUTION.md')), 'website asset attribution is missing');
 
 for (const [index, agent] of (catalog.agents || []).entries()) {
   const label = agent?.id || `agent[${index}]`;
