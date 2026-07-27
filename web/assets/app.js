@@ -1,4 +1,4 @@
-const SITE_RELEASE = '0.7.0-alpha.7';
+const SITE_RELEASE = '0.7.0-alpha.8';
 const versionedLocalUrl = (path) => `${path}?v=${encodeURIComponent(SITE_RELEASE)}`;
 
 const track = document.querySelector('[data-panel-track]');
