@@ -12,7 +12,7 @@ when the user explicitly wants the server available in every workspace.
      "mcpServers": {
        "supercollab": {
          "command": "npx",
-         "args": ["-y", "@supercollab/mcp@0.7.0-alpha.7"]
+         "args": ["-y", "@supercollab/mcp@0.7.0-alpha.8"]
        }
      }
    }

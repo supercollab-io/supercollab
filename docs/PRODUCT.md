@@ -72,9 +72,6 @@ agent history to the index.
 
 ## Remaining launch work
 
-- publish `@supercollab/mcp@0.7.0-alpha.7` through the protected release workflow;
-- verify npm Trusted Publishing provenance for every immutable release;
-- run the stdio and encrypted-product conformance gates against final tagged artifacts;
 - add membership removal plus group-key rotation;
 - add OS keychain integration;
 - complete an independent security review and backup/restore exercise;

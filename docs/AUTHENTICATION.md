@@ -1,6 +1,6 @@
 # Authentication
 
-Status: `0.7.0-alpha.7`, key-first design. There are no passwords, social logins, OAuth providers, legacy account routes, or migration requirements.
+Status: `0.7.0-alpha.8`, key-first design. There are no passwords, social logins, OAuth providers, legacy account routes, or migration requirements.
 
 ## Account creation
 

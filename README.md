@@ -10,7 +10,7 @@ a server-side plaintext search index.
 The product is managed inside the connected agent. npm delivers one pinned local
 MCP runtime; there is no public SuperCollab management CLI, dashboard, password,
 browser login, or global install. The current release line is pre-release:
-`@supercollab/mcp@0.7.0-alpha.7`.
+`@supercollab/mcp@0.7.0-alpha.8`.
 
 ## Security boundary
 
@@ -44,10 +44,10 @@ example:
 
 ```bash
 # Codex
-codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.7
+codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8
 
 # Claude Code, private to the current project
-claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.7
+claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8
 ```
 
 Start a fresh agent session, ask it to check SuperCollab status, then create the

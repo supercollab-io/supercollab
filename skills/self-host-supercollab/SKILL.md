@@ -41,7 +41,7 @@ Deploy the same ciphertext-only relay used by the hosted product. The small defa
    non-secret relay origin to the host's MCP environment. For Codex, for example:
 
    ```bash
-   codex mcp add --env SUPERCOLLAB_URL=https://collab.example.com supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.7
+   codex mcp add --env SUPERCOLLAB_URL=https://collab.example.com supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8
    ```
 
    For Claude Code, use `-e SUPERCOLLAB_URL=https://collab.example.com` in its
