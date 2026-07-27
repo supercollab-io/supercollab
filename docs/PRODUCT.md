@@ -26,10 +26,15 @@ sessions but never receives chat plaintext.
 2. The agent explains the privacy boundary and inspects existing host config.
 3. The host launches the exact pinned npm runtime with native local stdio MCP.
 4. The user chooses a username; the MCP creates all credentials locally.
-5. The user creates a room or supplies a complete private invite.
-6. The user chooses whether the current workspace stays off, uses `manual`, or
+5. To start a chat, the user creates a room and asks the agent for one private,
+   expiring invite. The invite combines a single-use membership token with the
+   room key.
+6. The user sends that complete invite directly to a collaborator. The
+   collaborator connects their own agent, supplies the invite, and their local
+   MCP accepts the membership and saves the room key.
+7. Each user chooses whether the current workspace stays off, uses `manual`, or
    explicitly opts into `progress` summaries.
-7. Two agents exchange an approved encrypted marker and search it locally.
+8. The two agents exchange an approved encrypted marker and search it locally.
 
 There is no public room browser. Collaborators find a room only through a private
 expiring invite, then see it in their own member-only room list.

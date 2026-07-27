@@ -133,6 +133,10 @@ function onboardingStep(number, title, text) {
   return { row, content };
 }
 
+function journeyLabel(text, extraClass = '') {
+  return make('p', `journey-label${extraClass ? ` ${extraClass}` : ''}`, text);
+}
+
 function renderAgentDetail(agent) {
   const detail = document.querySelector('[data-agent-detail]');
   if (!detail) return;
@@ -148,25 +152,43 @@ function renderAgentDetail(agent) {
   heading.append(headingCopy);
   detail.append(heading, make('p', 'detail-summary', agent.summary));
 
+  detail.append(journeyLabel('Your side'));
   const steps = make('div', 'onboarding-steps');
-  const first = onboardingStep('01', 'Give this to your agent', 'It identifies the host and changes only that host’s MCP configuration.');
   const skillUrl = `${window.location.origin}${versionedLocalUrl('/skill.md')}`;
-  const prompt = `Read ${skillUrl} and connect Super Collab to this workspace using ${agent.name}. Keep sharing off until I choose or join a room.`;
-  first.content.append(copyBox(prompt));
+  const connectPrompt = `Read ${skillUrl} and connect Super Collab to this workspace using ${agent.name}. I want to start a private room with a friend. Keep sharing off during setup and tell me when I need to restart ${agent.name}.`;
+  const first = onboardingStep('01', `Give this setup prompt to ${agent.name}`, 'It installs the pinned local MCP, asks you for a username, and shares nothing during setup.');
+  first.content.append(copyBox(connectPrompt));
   steps.append(first.row);
 
-  const second = onboardingStep('02', 'Use the agent-specific setup file', `The shared safety skill uses ${agent.name}’s dedicated host instructions and preserves the same privacy boundary.`);
-  for (const setup of agent.setups) {
-    const technical = make('details', 'technical-setup');
-    technical.append(make('summary', '', setup.label));
-    const target = make('p', 'setup-target', setup.target);
-    technical.append(target, copyBox(setup.value, 'setup'));
-    second.content.append(technical);
-  }
+  const roomPrompt = 'Finish Super Collab setup. Create a private room called “Friends”, activate this workspace in manual mode, and give me a one-person private invite that expires in 24 hours. Do not send a test message until I ask.';
+  const second = onboardingStep('02', 'Restart once, then create the room', `${agent.next_step} In the fresh session, paste this:`);
+  second.content.append(copyBox(roomPrompt));
   steps.append(second.row);
 
-  steps.append(onboardingStep('03', 'Restart, then use natural language', agent.next_step).row);
+  steps.append(onboardingStep('03', 'Send the private invite', 'Your agent returns one single-use code beginning sci_ and containing sck_. Send the complete code directly to your friend through a channel you trust. Treat it like a room credential, not a public link.').row);
   detail.append(steps);
+
+  detail.append(journeyLabel('Your friend’s side', 'friend-label'));
+  const friendSteps = make('div', 'onboarding-steps friend-steps');
+  friendSteps.append(onboardingStep('04', 'They connect their agent', 'They open this same page, choose the agent they use, paste its setup prompt, and restart once if that host requires it.').row);
+
+  const joinPrompt = 'Join this Super Collab room using the private invite below. Activate this workspace in manual mode and do not send a message unless I explicitly ask.\n\nPASTE_PRIVATE_INVITE_HERE';
+  const fifth = onboardingStep('05', 'They give their agent the invite', 'Their local MCP accepts the membership, saves the room key locally, and activates their workspace.');
+  fifth.content.append(copyBox(joinPrompt));
+  friendSteps.append(fifth.row);
+  friendSteps.append(onboardingStep('06', 'Start chatting', 'Ask either agent to send a message to the room. In manual mode, every outgoing message remains an explicit choice.').row);
+  detail.append(friendSteps);
+
+  const manualSetup = make('details', 'manual-setup');
+  manualSetup.append(make('summary', '', `Prefer to configure ${agent.name} manually?`));
+  for (const setup of agent.setups) {
+    const technical = make('div', 'technical-setup');
+    technical.append(make('p', 'setup-label', setup.label));
+    const target = make('p', 'setup-target', setup.target);
+    technical.append(target, copyBox(setup.value, 'setup'));
+    manualSetup.append(technical);
+  }
+  detail.append(manualSetup);
 
   const access = make('p', 'access-note');
   const accessStrong = make('strong', '', 'Client access: ');

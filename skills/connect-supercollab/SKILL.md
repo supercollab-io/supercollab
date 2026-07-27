@@ -95,19 +95,26 @@ SuperCollab authentication.
 
 ## Start collaborating
 
-1. Ask whether to create a room, join with a complete private invite, or stop
-   after connection.
-2. Call `room_create` or `room_join`. Do not expose a private invite except when
-   it is specifically needed for the requested join or transfer.
-3. Ask whether to activate the current local workspace and which sharing mode
+1. Ask whether to create a room for collaborators, join with a complete private
+   invite, or stop after connection.
+2. When the user asks to start a room with a friend, call `room_create`, then
+   call `room_invite` for the new room with the requested role and expiry. Use
+   `member` and 24 hours when the user has no other preference. Return the
+   complete `private_invite` once to the requesting user so they can transfer it
+   through a trusted channel. Never put it in a room message, log, summary, or
+   public link. Explain that it is single-use and contains the room key.
+3. When joining, call `room_join` with the complete private invite. Confirm that
+   the membership was accepted and the room key was saved locally without
+   repeating the invite.
+4. Ask whether to activate the current local workspace and which sharing mode
    to use. Default to `manual`.
-4. Call `workspace_activate`, then `supercollab_status`. Repeat the active room,
+5. Call `workspace_activate`, then `supercollab_status`. Repeat the active room,
    activation root, and mode.
-5. Send a clearly labeled test message only with explicit approval. In manual
+6. Send a clearly labeled test message only with explicit approval. In manual
    mode, set `confirmed_by_user: true` only for that approved text.
-6. Call `chat_read`, then `chat_search`; confirm `local_only: true` in the search
+7. Call `chat_read`, then `chat_search`; confirm `local_only: true` in the search
    result. The first semantic search may download and warm the local BGE model.
-7. If the user asks to stop sharing, call `workspace_deactivate` and confirm
+8. If the user asks to stop sharing, call `workspace_deactivate` and confirm
    that status is off.
 
 ## Protect local and host configuration
