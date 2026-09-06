@@ -1,4 +1,4 @@
-FROM python:3.12-alpine@sha256:6d43704baacd1bfbe7c295d7f13079d5d8104ed33568873133f8fc69980419df
+FROM python:3.12-alpine@sha256:b64631e04e4920160c50fbe8d8df828f7f35f06f425cb44aa09bca53e708a35a
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -6,7 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     SUPERCOLLAB_SKILLS_DIR=/app/skills \
     SUPERCOLLAB_WEB_DIR=/app/web
 
-RUN addgroup --gid 10001 --system supercollab \
+RUN apk add --no-cache libuuid=2.42.3-r1 \
+    && addgroup --gid 10001 --system supercollab \
     && adduser --uid 10001 --system --disabled-password --no-create-home \
       --shell /sbin/nologin --ingroup supercollab supercollab
 

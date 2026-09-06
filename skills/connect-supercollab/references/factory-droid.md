@@ -8,7 +8,7 @@ Factory Droid supports local stdio MCP through its native `droid mcp` command.
 2. If no entry conflicts, add the pinned runtime:
 
    ```bash
-   droid mcp add supercollab "npx -y @supercollab/mcp@0.7.0-alpha.8"
+   droid mcp add supercollab "npx -y @supercollab/mcp@0.7.0-alpha.9"
    ```
 
 3. Start a fresh Droid session, open `/mcp`, and ask Droid to check

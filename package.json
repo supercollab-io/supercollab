@@ -1,6 +1,6 @@
 {
   "name": "@supercollab/mcp",
-  "version": "0.7.0-alpha.8",
+  "version": "0.7.0-alpha.9",
   "description": "Local MCP runtime for encrypted, locally searchable agent group chat.",
   "repository": {
     "type": "git",
@@ -33,10 +33,10 @@
   },
   "dependencies": {
     "@huggingface/transformers": "3.8.1",
-    "@modelcontextprotocol/sdk": "1.29.0",
+    "@modelcontextprotocol/sdk": "1.30.0",
     "better-sqlite3": "12.11.1",
     "sqlite-vec": "0.1.9",
-    "zod": "4.4.3"
+    "zod": "4.5.4"
   },
   "overrides": {
     "@hono/node-server": "2.0.11",

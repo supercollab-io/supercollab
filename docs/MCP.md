@@ -6,7 +6,7 @@ relay is an HTTPS ciphertext API, not a remote MCP server.
 
 ## Runtime
 
-`@supercollab/mcp@0.7.0-alpha.8` uses Model Context Protocol TypeScript SDK
+`@supercollab/mcp@0.7.0-alpha.9` uses Model Context Protocol TypeScript SDK
 `1.29.0`, `McpServer`, and `StdioServerTransport`. Standard output is reserved
 for protocol messages; diagnostics use standard error. Node.js 20 or newer is
 required.
@@ -50,15 +50,15 @@ Every host launches the same pinned local command; no global install is needed.
 
 | Host | Native setup |
 |---|---|
-| Claude Code | `claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8` |
-| Codex | `codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8` |
-| Gemini CLI | `gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.8` |
+| Claude Code | `claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.9` |
+| Codex | `codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.9` |
+| Gemini CLI | `gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.9` |
 | OpenCode | local `mcp.supercollab.command` array in `opencode.json` |
-| GitHub Copilot CLI | `copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8` |
+| GitHub Copilot CLI | `copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.9` |
 | VS Code + Copilot | stdio server in `.vscode/mcp.json` |
 | Cline | local `mcpServers.supercollab` entry in Cline's MCP settings |
 | Cursor | local `mcpServers.supercollab` entry in `.cursor/mcp.json` |
-| Factory Droid | `droid mcp add supercollab "npx -y @supercollab/mcp@0.7.0-alpha.8"` |
+| Factory Droid | `droid mcp add supercollab "npx -y @supercollab/mcp@0.7.0-alpha.9"` |
 
 The onboarding skill must inspect an existing `supercollab` entry, preserve
 unrelated configuration, and obtain approval before replacing a different

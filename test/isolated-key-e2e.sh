@@ -14,7 +14,7 @@ SC_DB_PASSWORD="$(openssl rand -hex 24)"
 SC_APP_PASSWORD="$(openssl rand -hex 24)"
 SC_PEPPER="$(openssl rand -base64 32 | tr -d '\n')"
 SC_SERVER="http://127.0.0.1:${SC_PORT}"
-SC_IMAGE="supercollab-api:0.7.0-alpha.8"
+SC_IMAGE="supercollab-api:0.7.0-alpha.9"
 SC_POSTGRES_IMAGE="supercollab-postgres:16-alpine"
 SC_CLI=(node "${SC_ROOT}/bin/supercollab.js")
 SC_STAGE="preflight"
@@ -237,6 +237,8 @@ SC_READ_JSON="$("${SC_CLI[@]}" chat read --room "${SC_ROOM_ID}" --limit 20 \
   --config "${SC_BETA_CONFIG}")"
 SC_SEARCH_JSON="$("${SC_CLI[@]}" chat search --room "${SC_ROOM_ID}" --query "${SC_MARKER}" \
   --mode keyword --limit 5 --config "${SC_BETA_CONFIG}")"
+SC_VECTOR_JSON="$("${SC_CLI[@]}" chat search --room "${SC_ROOM_ID}" --query "${SC_MARKER}" \
+  --mode vector --limit 5 --config "${SC_BETA_CONFIG}")"
 
 SC_READ_JSON="${SC_READ_JSON}" SC_MARKER="${SC_MARKER}" node -e '
 const data = JSON.parse(process.env.SC_READ_JSON);
@@ -245,6 +247,11 @@ if (!(data.messages || []).some((row) => row.body === process.env.SC_MARKER)) pr
 SC_SEARCH_JSON="${SC_SEARCH_JSON}" SC_MARKER="${SC_MARKER}" node -e '
 const data = JSON.parse(process.env.SC_SEARCH_JSON);
 if (!(data.results || []).some((row) => row.body === process.env.SC_MARKER)) process.exit(1);
+'
+SC_VECTOR_JSON="${SC_VECTOR_JSON}" SC_MARKER="${SC_MARKER}" node -e '
+const data = JSON.parse(process.env.SC_VECTOR_JSON);
+if (data.search?.vector_error) throw new Error(data.search.vector_error);
+if (!(data.results || []).some((row) => row.body === process.env.SC_MARKER && row.vector_score > 0)) process.exit(1);
 '
 "${SC_CLI[@]}" chat send --room "${SC_ROOM_ID}" --text "${SC_BETA_MARKER}" \
   --config "${SC_BETA_CONFIG}" >/dev/null
@@ -282,7 +289,7 @@ if (health.database !== "ready") process.exit(1);
 SC_SKILL="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 1 --retry-all-errors \
   "${SC_SERVER}/skill.md")"
 grep --quiet '^name: connect-supercollab$' <<< "${SC_SKILL}"
-grep --fixed-strings --quiet '@supercollab/mcp@0.7.0-alpha.8' <<< "${SC_SKILL}"
+grep --fixed-strings --quiet '@supercollab/mcp@0.7.0-alpha.9' <<< "${SC_SKILL}"
 if grep --fixed-strings --quiet '@supercollab/cli' <<< "${SC_SKILL}"; then
   echo "isolated-e2e: hosted skill still exposes the retired CLI package" >&2
   exit 1
@@ -296,7 +303,7 @@ grep --ignore-case --quiet '^x-content-type-options: nosniff' <<< "${SC_HOME_HEA
 SC_AGENT_CATALOG="$(curl --fail --silent --show-error "${SC_SERVER}/assets/agents.json")"
 SC_AGENT_CATALOG="${SC_AGENT_CATALOG}" node -e '
 const catalog = JSON.parse(process.env.SC_AGENT_CATALOG);
-if (catalog.runtime?.package !== "@supercollab/mcp" || catalog.runtime?.version !== "0.7.0-alpha.8") process.exit(1);
+if (catalog.runtime?.package !== "@supercollab/mcp" || catalog.runtime?.version !== "0.7.0-alpha.9") process.exit(1);
 const agents = catalog.agents || [];
 const forbidden = ["featured", "verification", "verification_label", "verified_at", "client_version"];
 if (catalog.schema_version !== 2 || agents.length !== 8) process.exit(1);

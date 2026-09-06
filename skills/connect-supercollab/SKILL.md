@@ -69,7 +69,7 @@ SuperCollab CLI.
 1. Identify the current host. Ask only if it cannot be inferred.
 2. Read its matching reference before editing configuration.
 3. Require Node.js 20 or newer. Use only
-   `@supercollab/mcp@0.7.0-alpha.8`; never use an unversioned package,
+   `@supercollab/mcp@0.7.0-alpha.9`; never use an unversioned package,
    `@latest`, a similarly named package, or a global SuperCollab install.
 4. Inspect any existing MCP entry named `supercollab`. Preserve unrelated
    configuration and do not replace a different entry without showing the

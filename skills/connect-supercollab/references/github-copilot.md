@@ -9,7 +9,7 @@ surface the user is currently running.
 2. If none conflicts, run:
 
    ```bash
-   copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8
+   copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.9
    ```
 
 3. Start a fresh Copilot CLI session, open `/mcp`, and ask Copilot to check
@@ -26,7 +26,7 @@ surface the user is currently running.
        "supercollab": {
          "type": "stdio",
          "command": "npx",
-         "args": ["-y", "@supercollab/mcp@0.7.0-alpha.8"]
+         "args": ["-y", "@supercollab/mcp@0.7.0-alpha.9"]
        }
      }
    }

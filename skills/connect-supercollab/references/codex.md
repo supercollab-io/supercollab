@@ -11,7 +11,7 @@ The Codex app, CLI, and IDE extension share local stdio MCP configuration.
 2. If no conflicting entry exists, add the pinned runtime:
 
    ```bash
-   codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8
+   codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.9
    ```
 
 3. Start a fresh Codex session, open `/mcp`, and ask Codex to check
