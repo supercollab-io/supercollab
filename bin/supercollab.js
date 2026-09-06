@@ -11,7 +11,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 
-const VERSION = '0.7.0-alpha.8';
+const VERSION = '0.7.0-alpha.9';
 const CLI_ENTRY = fileURLToPath(import.meta.url);
 const DEFAULT_SERVER = process.env.SUPERCOLLAB_URL || 'https://supercollab.io';
 const DEFAULT_CONFIG = process.env.SUPERCOLLAB_CONFIG || path.join(os.homedir(), '.supercollab', 'config.json');
@@ -1196,11 +1196,14 @@ async function syncRoom(config, file, roomId, limit = 500) {
   roomId = normalizeRoomId(roomId);
   const cap = await openChatDb(config, file, roomId);
   try {
-    const after = Number(getMeta(cap.db, 'last_message_id', '0')) || 0;
+    // Older clients advanced last_message_id on send, which could skip unseen
+    // messages. Start a separate receive cursor at zero so upgrades backfill
+    // those gaps; inserts and embeddings are already idempotent.
+    const after = Number(getMeta(cap.db, 'last_synced_message_id', '0')) || 0;
     const data = await apiAsAgent(config, 'GET', `/v1/rooms/${roomId}/messages?after=${encodeURIComponent(after)}&limit=${encodeURIComponent(limit)}`);
     for (const msg of data.messages || []) await insertLocalMessage(cap.db, { ...msg, room_id: roomId }, config, roomId);
     const embedding = await embedMissingMessages(cap.db, 500);
-    setMeta(cap.db, 'last_message_id', String(data.next_after || after));
+    setMeta(cap.db, 'last_synced_message_id', String(data.next_after || after));
     setMeta(cap.db, 'last_sync_at', nowIso());
     saveChatDb(cap);
     return { room_id: roomId, pulled: (data.messages || []).length, last_message_id: Number(data.next_after || after), db: cap.dbPath, embedding };
@@ -1275,7 +1278,7 @@ async function doChatSend(config, file, opts) {
   const cap = await openChatDb(config, file, roomId);
   try {
     await insertLocalMessage(cap.db, { ...data.message, room_id: roomId }, config, roomId);
-    setMeta(cap.db, 'last_message_id', String(Math.max(Number(getMeta(cap.db, 'last_message_id', '0')) || 0, Number(data.message.id))));
+    // A successful send says nothing about which earlier messages were read.
     saveChatDb(cap);
   } finally {
     cap.db.close();
@@ -1432,13 +1435,14 @@ function activationFor(config, cwd = normalizeCwd()) {
   const activations = config.activations || {};
   let best = null;
   for (const [root, activation] of Object.entries(activations)) {
-    if (!activation?.enabled) continue;
+    if (!activation) continue;
     const abs = path.resolve(root);
-    if (cwd === abs || cwd.startsWith(abs + path.sep)) {
+    const prefix = abs.endsWith(path.sep) ? abs : abs + path.sep;
+    if (cwd === abs || cwd.startsWith(prefix)) {
       if (!best || abs.length > best.cwd.length) best = { cwd: abs, ...activation };
     }
   }
-  return best;
+  return best?.enabled ? best : null;
 }
 
 function normalizeSharingMode(value) {
@@ -1471,10 +1475,12 @@ function activate(config, file, opts) {
 
 function deactivate(config, file, opts) {
   const cwd = normalizeCwd(opts.cwd);
-  if (config.activations?.[cwd]) {
-    config.activations[cwd].enabled = false;
-    config.activations[cwd].deactivatedAt = nowIso();
-  }
+  config.activations = config.activations || {};
+  config.activations[cwd] = {
+    ...config.activations[cwd],
+    enabled: false,
+    deactivatedAt: nowIso(),
+  };
   saveConfig(config, file);
   return { ok: true, cwd, active: false, instructions: agentInstructions(null) };
 }
@@ -1656,7 +1662,7 @@ function mcpTextResult(data) {
   return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
 }
 
-function registerMcpTools(server, config) {
+function registerMcpTools(server, loadCurrentConfig) {
   const readOnly = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true };
   const writes = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true };
   const destructiveWrites = { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true };
@@ -1737,15 +1743,19 @@ function registerMcpTools(server, config) {
 
   for (const [name, description, inputSchema, annotations] of registrations) {
     server.registerTool(name, { description, inputSchema, annotations }, async (args) => {
-      return mcpTextResult(await callTool(config, name, args));
+      return mcpTextResult(await callTool(loadCurrentConfig(), name, args));
     });
   }
 }
 
 export async function runMcp(opts) {
   const file = configPath(opts);
-  const config = attachRuntimeConfig(loadConfig(file, opts.profile || null), file);
-  config.serverUrl = opts.server || config.serverUrl || DEFAULT_SERVER;
+  const loadCurrentConfig = () => {
+    const current = attachRuntimeConfig(loadConfig(file, opts.profile || null), file);
+    current.serverUrl = opts.server || current.serverUrl || DEFAULT_SERVER;
+    return current;
+  };
+  const config = loadCurrentConfig();
   const active = activationFor(config);
   const server = new McpServer(
     { name: 'supercollab', version: VERSION },
@@ -1753,11 +1763,11 @@ export async function runMcp(opts) {
       ? agentInstructions(active)
       : 'SuperCollab needs one-time local setup. Ask the user for a username and call supercollab_setup. Never ask for or expose an account key.' },
   );
-  registerMcpTools(server, config);
+  registerMcpTools(server, loadCurrentConfig);
   server.registerPrompt('supercollab_workspace_context', {
     description: 'Current SuperCollab activation state and agent instructions for this local workspace.',
   }, async () => {
-    const prompt = mcpPrompts(config)[0];
+    const prompt = mcpPrompts(loadCurrentConfig())[0];
     return { description: prompt.description, messages: prompt.messages };
   });
 

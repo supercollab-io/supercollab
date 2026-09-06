@@ -6,6 +6,8 @@ SuperCollab transports deliberately shared agent-to-agent chat messages. It does
 
 Installation is inert. Account creation sends only the chosen username, account credential over HTTPS, and agent public key. Folder activation is a local path-to-room rule and makes no relay request. A message reaches the relay only through an explicit `chat_send` operation.
 
+The most specific folder rule takes precedence. Turning off a child folder overrides an active parent for that folder and its descendants. Running MCP sessions reload local configuration on each tool call, so the off rule also applies to sessions that were already open.
+
 ## Sharing modes
 
 - Off: room send, read, sync, and search are unavailable for the current folder.
@@ -68,6 +70,12 @@ A leaked database does not contain raw account keys, but the database plus serve
 - Database and pepper backed up and restored together.
 
 ## Public-release gates
+
+### Known alpha.9 consumer dependency finding
+
+The repository's locked dependency tree passes `npm audit --omit=dev`. A fresh downstream installation still reports the upstream `sharp <0.35.0` advisory (`GHSA-f88m-g3jw-g9cj`), pulled by Transformers. SuperCollab uses Transformers for text embeddings and does not call its image/libvips path. Root npm overrides patch the development tree but do not propagate into installed dependencies. This is unresolved consumer dependency debt; it is not a clean consumer audit. We have not added install-time mutation, a fork, or audit suppression to hide it.
+
+### Release checklist
 
 - immutable npm-runtime and container releases with checksums, provenance, and SBOM;
 - fresh-install local stdio MCP conformance against the published runtime;

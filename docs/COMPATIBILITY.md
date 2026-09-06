@@ -1,6 +1,6 @@
 # Agent transport standards
 
-Target runtime: `@supercollab/mcp@0.7.0-alpha.8` on Node.js 20+.
+Target runtime: `@supercollab/mcp@0.7.0-alpha.9` on Node.js 20+.
 
 The canonical machine-readable catalog is
 [`web/assets/agents.json`](../web/assets/agents.json). `npm run check:compat`

@@ -2,7 +2,7 @@
   "schema_version": 2,
   "runtime": {
     "package": "@supercollab/mcp",
-    "version": "0.7.0-alpha.8",
+    "version": "0.7.0-alpha.9",
     "node": ">=20",
     "protocol": "mcp",
     "transport": "stdio",
@@ -23,7 +23,7 @@
           "label": "Claude Code command",
           "format": "command",
           "target": "Run from the intended project folder",
-          "value": "claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8"
+          "value": "claude mcp add --transport stdio --scope local supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.9"
         }
       ],
       "next_step": "Start a fresh Claude Code session, open /mcp, and ask Claude to check SuperCollab status.",
@@ -49,7 +49,7 @@
           "label": "Codex command",
           "format": "command",
           "target": "Run once in a terminal",
-          "value": "codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8"
+          "value": "codex mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.9"
         }
       ],
       "next_step": "Start a fresh Codex session, open /mcp, and ask Codex to check SuperCollab status.",
@@ -75,7 +75,7 @@
           "label": "Gemini CLI command",
           "format": "command",
           "target": "Run from the intended project folder",
-          "value": "gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.8"
+          "value": "gemini mcp add --scope project supercollab npx -y @supercollab/mcp@0.7.0-alpha.9"
         }
       ],
       "next_step": "Start a fresh Gemini CLI session, open /mcp, and ask Gemini to check SuperCollab status.",
@@ -101,7 +101,7 @@
           "label": "OpenCode project config",
           "format": "json",
           "target": "Merge into opencode.json",
-          "value": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"mcp\": {\n    \"supercollab\": {\n      \"type\": \"local\",\n      \"command\": [\"npx\", \"-y\", \"@supercollab/mcp@0.7.0-alpha.8\"],\n      \"enabled\": true\n    }\n  }\n}"
+          "value": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"mcp\": {\n    \"supercollab\": {\n      \"type\": \"local\",\n      \"command\": [\"npx\", \"-y\", \"@supercollab/mcp@0.7.0-alpha.9\"],\n      \"enabled\": true\n    }\n  }\n}"
         }
       ],
       "next_step": "Restart OpenCode, run opencode mcp list, and ask it to check SuperCollab status.",
@@ -127,13 +127,13 @@
           "label": "Copilot CLI command",
           "format": "command",
           "target": "Run once in a terminal",
-          "value": "copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.8"
+          "value": "copilot mcp add supercollab -- npx -y @supercollab/mcp@0.7.0-alpha.9"
         },
         {
           "label": "VS Code workspace config",
           "format": "json",
           "target": "Merge into .vscode/mcp.json",
-          "value": "{\n  \"servers\": {\n    \"supercollab\": {\n      \"type\": \"stdio\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.8\"]\n    }\n  }\n}"
+          "value": "{\n  \"servers\": {\n    \"supercollab\": {\n      \"type\": \"stdio\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.9\"]\n    }\n  }\n}"
         }
       ],
       "next_step": "Start a fresh Copilot CLI or VS Code agent session, list MCP servers, and ask Copilot to check SuperCollab status.",
@@ -163,7 +163,7 @@
           "label": "Cline MCP config",
           "format": "json",
           "target": "Merge into Cline's MCP settings",
-          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.8\"],\n      \"disabled\": false,\n      \"autoApprove\": []\n    }\n  }\n}"
+          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.9\"],\n      \"disabled\": false,\n      \"autoApprove\": []\n    }\n  }\n}"
         }
       ],
       "next_step": "Start a fresh Cline session and ask it to check SuperCollab status; keep write-tool approval manual.",
@@ -189,7 +189,7 @@
           "label": "Cursor project config",
           "format": "json",
           "target": "Merge into .cursor/mcp.json",
-          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.8\"]\n    }\n  }\n}"
+          "value": "{\n  \"mcpServers\": {\n    \"supercollab\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@supercollab/mcp@0.7.0-alpha.9\"]\n    }\n  }\n}"
         }
       ],
       "next_step": "Start a fresh Cursor agent session, list MCP servers, and ask Cursor to check SuperCollab status.",
@@ -215,7 +215,7 @@
           "label": "Factory Droid command",
           "format": "command",
           "target": "Run once in a terminal",
-          "value": "droid mcp add supercollab \"npx -y @supercollab/mcp@0.7.0-alpha.8\""
+          "value": "droid mcp add supercollab \"npx -y @supercollab/mcp@0.7.0-alpha.9\""
         }
       ],
       "next_step": "Start a fresh Droid session, open /mcp, and ask Droid to check SuperCollab status.",
